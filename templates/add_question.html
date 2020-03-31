@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Add question</title>
+</head>
+<body>
+
+<h1>{% block headline %}Add Question{% endblock %}</h1>
+
+
+<form action="#" method="post" id="ask">
+
+    <label for="title">Title</label><br><br>
+    <textarea id="title" name="title" rows="6" cols="25">{% block title %}{% endblock %}</textarea><br><br>
+
+    <label for="message">Message</label><br><br>
+    <textarea id="message" name="message" rows="6" cols="25">{% block message %}{% endblock %}</textarea><br><br>
+
+    <button type="submit">{% block button %}Add question{% endblock %}</button>
+</form>
+
+</body>
+</html>
