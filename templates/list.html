@@ -5,10 +5,29 @@
     <title></title>
 </head>
 <body>
+<table>
+    <th class="table">
+    {% for elem in ["id","submission_time","view_number","vote_number","title","message","image"] %}
+        <td>{{ elem }}</td>
+    {% endfor %}
+    </th>
 
-{% for i in range(rows) %}
-    <p><a href="{{ url_for("display_question", question_id=all_data[i]["id"]) }}">{{ all_data[i]["message"] }}</a></p>
-{% endfor %}
+    {% for i in range(rows) %}
+    <tr>
+        <td>{{ all_data[i]["id"] }}</td>
+        <td>{{ all_data[i]["submission_time"] }}</td>
+        <td>{{ all_data[i]["view_number"] }}</td>
+        <td>{{ all_data[i]["vote_number"] }}<br><a href="{{ url_for("vote_up", question_id=all_data[i]["id"]) }}">Up</a><a href="{{ url_for("vote_down", question_id=all_data[i]["id"]) }}">Down</a></td>
+        <td>{{ all_data[i]["title"] }}</td>
+        <td><a href="{{ url_for("display_question", question_id=all_data[i]["id"]) }}">{{ all_data[i]["message"] }}</a></td>
+        <td>{{ all_data[i]["image"] }}</td>
+
+    </tr>
+    {% endfor %}
+
+</table>
+
+
 
 <a href="/list/add-question">Add question</a>
 

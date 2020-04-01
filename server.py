@@ -78,11 +78,11 @@ def edit_question(question_id):
             index = i
 
     if request.method == "POST":
-        all_q_data.remove(all_q_data[index])
-        time_stample = str(time.time())
-        q_id = data_manager.create_id(data_manager.ALL_Q_ID)
-        question = [q_id, time_stample, "0", "0", request.form["title"], request.form["message"], " "]
-        data_manager.add_element("sample_data/answer.csv", question)
+        time_stample = time.time()
+        all_q_data[index]["title"] = request.form["title"]
+        all_q_data[index]["message"] = request.form["message"]
+        all_q_data[index]["submission_time"] = time_stample
+        data_manager.write_csv(all_q_data, 'sample_data/question.csv', ["id","submission_time","view_number","vote_number","title","message","image"])
         return redirect(url_for("display_question", question_id=question_id))
     else:
         return render_template("edit.html", current_data=current_data)
@@ -91,36 +91,70 @@ def edit_question(question_id):
 @app.route("/question/<question_id>/delete")
 def delete_question(question_id):
     all_q_data = data_manager.read_csv('sample_data/question.csv')
-    all_a_data = data_manager.read_csv('sample_data/answer.csv')
     for i in range(len(all_q_data)):
-        if question_id == all_q_data[i][0]:
-            data_manager.ALL_QUESTION_DATAS.remove(all_q_data[i])
+        if question_id == all_q_data[i]["id"]:
+            all_q_data.remove(all_q_data[i])
+            data_manager.write_csv(all_q_data, 'sample_data/question.csv', ["id","submission_time","view_number","vote_number","title","message","image"])
+            return redirect(url_for("list"))
 
-    for i in range(len(all_a_data)):
-        if question_id == all_a_data[i][0]:
-            data_manager.ALL_ANSWER_DATAS.remove(all_a_data[i])
-
-    data_manager.ALL_ID.remove(question_id)
-
-    return redirect(url_for("list"))        
         
         
 
-'''
+
 @app.route("/answer/<answer_id>/delete")
-def delete_(question_id):
+def delete_answer(answer_id):
 
+    all_a_data = data_manager.read_csv('sample_data/answer.csv')
     for i in range(len(all_a_data)):
-        if question_id == all_a_data[i][0]:
-            data_manager.ALL_ANSWER_DATAS.remove(all_a_data[i])
-
-    data_manager.ALL_ID.remove(question_id)
-
-    return redirect(url_for("list"))
-'''
-
+        if answer_id == all_a_data[i]["id"]:
+            question_id = all_a_data[i]["question_id"]
+            all_a_data.remove(all_a_data[i])
+            data_manager.write_csv(all_a_data, 'sample_data/answer.csv',
+                                   ["id", "submission_time", "vote_number", "question_id", "message", "image"])
+            return redirect(url_for("display_question", question_id=question_id))
 
 
+@app.route("/question/<question_id>/vote_up")
+def vote_up(question_id):
+    all_q_data = data_manager.read_csv('sample_data/question.csv')
+    for i in range(len(all_q_data)):
+        if question_id == all_q_data[i]["id"]:
+            all_q_data[i]["vote_number"] = str(int(all_q_data[i]["vote_number"]) + 1)
+            data_manager.write_csv(all_q_data, 'sample_data/question.csv', ["id","submission_time","view_number","vote_number","title","message","image"])
+            return redirect(url_for("list"))
+
+
+@app.route("/question/<question_id>/vote_down")
+def vote_down(question_id):
+    all_q_data = data_manager.read_csv('sample_data/question.csv')
+    for i in range(len(all_q_data)):
+        if question_id == all_q_data[i]["id"]:
+            all_q_data[i]["vote_number"] = str(int(all_q_data[i]["vote_number"]) - 1)
+            data_manager.write_csv(all_q_data, 'sample_data/question.csv', ["id","submission_time","view_number","vote_number","title","message","image"])
+            return redirect(url_for("list"))
+
+@app.route("/answer/<answer_id>/vote_up")
+def vote_a_up(answer_id):
+    all_a_data = data_manager.read_csv('sample_data/answer.csv')
+    for i in range(len(all_a_data)):
+        if answer_id == all_a_data[i]["id"]:
+            question_id = all_a_data[i]["question_id"]
+            all_a_data[i]["vote_number"] = str(int(all_a_data[i]["vote_number"]) + 1)
+            data_manager.write_csv(all_a_data, 'sample_data/answer.csv',
+                                   ["id", "submission_time", "vote_number", "question_id", "message", "image"])
+            return redirect(url_for("display_question", question_id=question_id))
+
+
+@app.route("/answer/<answer_id>/vote_down")
+def vote_a_down(answer_id):
+    all_a_data = data_manager.read_csv('sample_data/answer.csv')
+    for i in range(len(all_a_data)):
+        if answer_id == all_a_data[i]["id"]:
+            question_id = all_a_data[i]["question_id"]
+            all_a_data[i]["vote_number"] = str(int(all_a_data[i]["vote_number"]) - 1)
+            data_manager.write_csv(all_a_data, 'sample_data/answer.csv',
+                                   ["id", "submission_time", "vote_number", "question_id", "message", "image"])
+            return redirect(url_for("display_question", question_id=question_id))
 
 
 if __name__ == "__main__":

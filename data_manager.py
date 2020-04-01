@@ -12,15 +12,11 @@ def create_id(id_type):
 
 
 
-def write_csv(filename, datas):
-
-    with open(filename, "w") as w_file:
-        writer = csv.DictWriter(w_file, fieldnames=HEADERS)
-        writer.writeheader()
-
-        for i in range(len(datas)):
-            writer.writerows(HEADERS)
-
+def write_csv(datas, file_name, headers):
+    with open(file_name, "w") as file:
+        csv_writer = csv.DictWriter(file, fieldnames=headers)
+        csv_writer.writeheader()
+        csv_writer.writerows(datas)
 
 
 def read_csv(filename):
@@ -36,7 +32,6 @@ def add_element(filename, datas):
     with open(filename, "a") as file:
         row = ",".join(datas)
         file.write(row + "\n")
-
 
 
 
@@ -61,10 +56,8 @@ def main():
     print("\n\n")
     print(ALL_QUESTION_DATAS[0]["id"])
     print("\n\n")
-    for head in HEADERS:
-        print(head)
-
-    print(write_csv('sample_data/question.csv', ALL_QUESTION_DATAS))
+    print(HEADERS)
+    print(ALL_QUESTION_DATAS)
 
 
         
