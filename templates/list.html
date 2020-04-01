@@ -7,7 +7,7 @@
 <body>
 
 {% for i in range(rows) %}
-    <p><a href="{{ url_for("display_question", question_id=all_data[i][0]) }}">{{ all_data[i][5] }}</a></p>
+    <p><a href="{{ url_for("display_question", question_id=all_data[i]["id"]) }}">{{ all_data[i]["message"] }}</a></p>
 {% endfor %}
 
 <a href="/list/add-question">Add question</a>

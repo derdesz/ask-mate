@@ -1,6 +1,6 @@
 {% extends "add_question.html" %}
 
 {% block headline %}Edit question{% endblock %}
-{% block title %}{{ current_data[4] }}{% endblock %}
-{% block message %}{{ current_data[5] }}{% endblock %}
+{% block title %}{{ current_data["title"] }}{% endblock %}
+{% block message %}{{ current_data["message"] }}{% endblock %}
 {% block button %}Edit question{% endblock %}

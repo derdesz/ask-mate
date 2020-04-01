@@ -6,20 +6,18 @@
 </head>
 <body>
             <h5>Title:</h5>
-            <p>{{ current_q_data[4] }}</p><br><br>
+            <p>{{ current_q_data["title"] }}</p><br><br>
 
             <h5>Question:</h5>
-            <p>{{ current_q_data[5] }}</p>
+            <p>{{ current_q_data["message"] }}</p>
 
             <h5>Answer:</h5>
-            {% for i in range(4, a_col) %}
-
-                <p>{{ current_a_data[i] }}</p>
+            {% for elem in current_a_data %}
+                <p>{{ elem["message"] }}</p>
 
             {% endfor %}
 
 <a href="{{ url_for("new_answer", question_id=id) }}">Add answer</a>
-<a href="{{ url_for("delete_question", question_id=id) }}">Delete question</a>
 <a href="{{ url_for("edit_question", question_id=id) }}">Edit question</a>
 
 </body>
