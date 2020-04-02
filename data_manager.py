@@ -1,5 +1,6 @@
 import csv
 import random
+import operator
 
 
 def create_id(id_type):

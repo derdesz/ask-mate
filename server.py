@@ -2,10 +2,12 @@ from flask import Flask, render_template, request, redirect, url_for
 import csv
 import data_manager
 import time
-app = Flask(__name__)
+app = Flask(__name__, static_folder='static')
 
 import os
 from werkzeug.utils import secure_filename
+
+app = Flask(__name__, static_folder='static')
 
 app.config["IMAGE_UPLOADS"] = "/Users/derdesz/Desktop/projects/ask-mate-remotemates/static"
 app.config["ALLOWED_IMAGE_EXTENSIONS"] = ["PNG", "JPG"]
@@ -72,6 +74,8 @@ def ask_question():
             data_manager.add_element('sample_data/question.csv', current_q_data)
         if request.files:
             image = request.files["image"]
+            filename = image.filename
+            print(filename)
             if image.filename == "":
                 print("image must have a filename")
                 return redirect(request.url)
@@ -82,9 +86,9 @@ def ask_question():
                 filename = secure_filename(image.filename)
                 current_q_data = [q_id, time_stample, '0', '0', '', '', filename]
                 data_manager.add_element('sample_data/question.csv', current_q_data)
-                image.save(os.path.join(app.config["IMAGE_UPLOADS"], image.filename))
+                image.save(os.path.join(app.config["IMAGE_UPLOADS"], filename))
 
-            return redirect(url_for("display_question", question_id=q_id, filename=filename))
+            return redirect(url_for("display_question", question_id=q_id))
 
         return redirect(url_for("display_question", question_id=q_id))
 
@@ -123,6 +127,7 @@ def edit_question(question_id):
             data_manager.write_csv(all_q_data, 'sample_data/question.csv', ["id","submission_time","view_number","vote_number","title","message","image"])
         if request.files:
             image = request.files["image"]
+            filename = image.filename
             if image.filename == "":
                 print("image must have a filename")
                 return redirect(request.url)
@@ -218,74 +223,6 @@ def sort():
     all_q_data = data_manager.read_sorted_csv('sample_data/question.csv', header, reversed)
     data_manager.write_csv(all_q_data, 'sample_data/question.csv', ["id","submission_time","view_number","vote_number","title","message","image"])
     return redirect(url_for("list"))
-
-
-'''
-@app.route("/question/upload_image", methods=["POST", "GET"])
-def upload_image():
-    time_stample = str(time.time())
-    q_id = data_manager.create_id(data_manager.ALL_Q_ID)
-    if request.method == "POST":
-        if request.files:
-            image = request.files["image"]
-
-            if image.filename == "":
-                print("image must have a filename")
-                return redirect(request.url)
-
-            if not allowed_image(image.filename):
-                print("That image extension is not allowed")
-                return redirect(request.url)
-
-            else:
-                filename = secure_filename(image.filename)
-                print(filename)
-                current_q_data = [q_id, time_stample, '0', '0', '', '', filename]
-                data_manager.add_element('sample_data/question.csv', current_q_data)
-                image.save(os.path.join(app.config["IMAGE_UPLOADS"], image.filename))
-
-                #all_q_data = data_manager.read_csv('sample_data/question.csv')
-
-
-            return redirect(url_for("display_question", question_id=q_id, filename=filename))
-
-    return render_template("add_question.html")'''
-
-'''
-@app.route("/question/<question_id>/upload_image", methods=["POST","GET"])
-def upload_image_existing_q(question_id):
-    all_q_data = data_manager.read_csv('sample_data/question.csv')
-    for i in range(len(all_q_data)):
-        if question_id == all_q_data[i]["id"]:
-            current_data = all_q_data[i]
-            index = i
-
-    if request.method == "POST":
-        if request.files:
-            image = request.files["image"]
-
-            if image.filename == "":
-                print("image must have a filename")
-                return redirect(request.url)
-
-            if not allowed_image(image.filename):
-                print("That image extension is not allowed")
-                return redirect(request.url)
-
-            else:
-                filename = secure_filename(image.filename)
-                time_stample = time.time()
-                all_q_data[index]["image"] = filename
-                all_q_data[index]["submission_time"] = time_stample
-                data_manager.write_csv(all_q_data, 'sample_data/question.csv', ["id","submission_time","view_number","vote_number","title","message","image"])
-            return redirect(url_for("display_question", question_id=question_id))
-    else:
-        return render_template("edit.html", current_data=current_data, question_id=question_id)
-
-
-
-'''
-
 
 
 

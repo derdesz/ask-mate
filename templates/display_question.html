@@ -7,7 +7,7 @@
 
         #text {width: 40%;}
         #anchors {horiz-align: center}
-        img {width: 20px}
+        img {width: 300px}
         #picture {float: right;padding-right: 30%}
 
     </style>
@@ -29,7 +29,7 @@
             {% endfor %}
     </div>
 
-<img src="{{ url_for('static', filename=filename)}}" id="picture">
+<img src="{{ url_for('static', filename=current_q_data["image"])}}" id="picture">
 
     <div id="anchors">
         <a href="{{ url_for("new_answer", question_id=id) }}">Add answer</a>
