@@ -21,3 +21,10 @@ app.config["ALLOWED_IMAGE"] = ["PNG", "JPG"]
     <button type="submit" ">Upload image</button>
 
 </form>
+
+
+    <div id="image">
+
+        <img src="{{ url_for('static', filename=filename) }}">
+
+    </div>

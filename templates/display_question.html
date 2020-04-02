@@ -8,6 +8,8 @@
         #text {width: 40%;}
         #anchors {horiz-align: center}
         img {width: 20px}
+        #picture {float: right;padding-right: 30%}
+
     </style>
 </head>
 <body>
@@ -27,16 +29,13 @@
             {% endfor %}
     </div>
 
-    <div id="image">
-
-        <img src="{{ url_for('static', filename=filename) }}">
-
-    </div>
+<img src="{{ url_for('static', filename=filename)}}" id="picture">
 
     <div id="anchors">
         <a href="{{ url_for("new_answer", question_id=id) }}">Add answer</a>
         <a href="{{ url_for("edit_question", question_id=id) }}">Edit question</a>
         <a href="{{ url_for("delete_question", question_id=id) }}">Delete question</a>
+
     </div>
 </body>
 </html>

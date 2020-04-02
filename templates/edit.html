@@ -12,6 +12,6 @@
 
         <label for="image">Select image:</label><br><br>
         <input type="file"  name="image" id="image">
-        <button href="{{ url_for("upload_image_existing_q", question_id=question_id) }}" type="submit" ">Upload image</button>
+        <button href="{{ url_for("display_question", question_id=question_id) }}" type="submit" ">Upload image</button>
 
 </form>
