@@ -11,7 +11,7 @@ from werkzeug.utils import secure_filename
 
 app = Flask(__name__, static_folder='static')
 
-app.config["IMAGE_UPLOADS"] = "/home/my_project/web/1st/ask-mate-remotemates/static"
+app.config["IMAGE_UPLOADS"] = "/home/getulus/my_project/web/1st/ask-mate-remotemates/static"
 app.config["ALLOWED_IMAGE_EXTENSIONS"] = ["PNG", "JPG"]
 
 def allowed_image(filename):
@@ -147,6 +147,7 @@ def edit_question(question_id):
                 data_manager.write_csv(all_q_data, 'sample_data/question.csv',
                                        ["id", "submission_time", "view_number", "vote_number", "title", "message",
                                         "image"])
+                image.save(os.path.join(app.config["IMAGE_UPLOADS"], filename))
         return redirect(url_for("display_question", question_id=question_id))
     else:
         return render_template("edit.html", current_data=current_data, question_id=question_id)
