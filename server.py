@@ -25,10 +25,21 @@ def hello():
 
     return render_template("main.html")
 
-@app.route('/list')
+@app.route('/list', methods=["POST","GET"])
 def list():
-    all_question_datas = data_manager.read_csv('sample_data/question.csv')
-    return render_template('list.html', rows=len(all_question_datas), all_data=all_question_datas)
+    if request.method == "POST":
+        header =request.form["title"]
+        if request.form["way"] == "Ascending":
+            reversed = False
+        else:
+            reversed = True
+        all_q_data = data_manager.read_sorted_csv('sample_data/question.csv', header, reversed)
+        data_manager.write_csv(all_q_data, 'sample_data/question.csv',
+                               ["id", "submission_time", "view_number", "vote_number", "title", "message", "image"])
+        return redirect(url_for("list"))
+    else:
+        all_question_datas = data_manager.read_csv('sample_data/question.csv')
+        return render_template('list.html', rows=len(all_question_datas), all_data=all_question_datas)
 
 
 @app.route("/list/question/<string:question_id>")
@@ -195,6 +206,19 @@ def vote_a_down(answer_id):
             data_manager.write_csv(all_a_data, 'sample_data/answer.csv',
                                    ["id", "submission_time", "vote_number", "question_id", "message", "image"])
             return redirect(url_for("display_question", question_id=question_id))
+
+@app.route("/list/sort")
+def sort():
+    header = request.args["title"]
+    reversed = request.args["order_direction"]
+    if reversed == "descending":
+        reversed = True
+    else:
+        reversed = False
+    all_q_data = data_manager.read_sorted_csv('sample_data/question.csv', header, reversed)
+    data_manager.write_csv(all_q_data, 'sample_data/question.csv', ["id","submission_time","view_number","vote_number","title","message","image"])
+    return redirect(url_for("list"))
+
 
 '''
 @app.route("/question/upload_image", methods=["POST", "GET"])

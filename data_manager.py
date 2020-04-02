@@ -34,6 +34,24 @@ def add_element(filename, datas):
         file.write(row + "\n")
 
 
+def read_sorted_csv(filename, header, reverse):
+    all_data = []
+    with open (filename, "r") as file:
+        csv_reader = csv.DictReader(file)
+        data = sorted(csv_reader, key=operator.itemgetter(header), reverse=reverse)
+
+        if header == "title" or header == "message":
+            pass
+        else:
+            for row in data:
+                row[header] = int(row[header])
+            data = sorted(data, key=operator.itemgetter(header), reverse=reverse)
+
+        for rows in data:
+            all_data.append(rows)
+        return all_data
+
+
 
 
 ALL_QUESTION_DATAS = read_csv('sample_data/question.csv')

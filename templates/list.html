@@ -3,19 +3,32 @@
 <head>
     <meta charset="UTF-8">
     <title></title>
+    <style>
+
+        table, th td {border: 1px solid black}
+        #second_col {text-align: center}
+
+    </style>
 </head>
 <body>
-<table>
+<table id="table">
     <th class="table">
     {% for elem in ["id","submission_time","view_number","vote_number","title","message","image"] %}
         <td>{{ elem }}</td>
     {% endfor %}
+    <th>
+        <td>ID</td>
+        <td>Submission Time</td>
+        <td>ID</td>
+        <td>ID</td>
+        <td>ID</td>
+    </th>
     </th>
 
     {% for i in range(rows) %}
     <tr>
-        <td>{{ all_data[i]["id"] }}</td>
-        <td>{{ all_data[i]["submission_time"] }}</td>
+        <td id="first_col">{{ all_data[i]["id"] }}</td>
+        <td id="second_col">{{ all_data[i]["submission_time"] }}</td>
         <td>{{ all_data[i]["view_number"] }}</td>
         <td>{{ all_data[i]["vote_number"] }}<br><a href="{{ url_for("vote_up", question_id=all_data[i]["id"]) }}">Up</a><a href="{{ url_for("vote_down", question_id=all_data[i]["id"]) }}">Down</a></td>
         <td>{{ all_data[i]["title"] }}</td>
@@ -25,13 +38,28 @@
     </tr>
     {% endfor %}
 
-</table>
+</table><br><br>
 
 
 
 <a href="/list/add-question">Add question</a>
 
+<form name="sort" action="#" method="post">
+    <select name="title">
+        <option>id</option>
+        <option>submission_time</option>
+        <option>message</option>
+        <option>view_number</option>
+        <option>vote_number</option>
+        <option>title</option>
+    </select>
+    <select name="way">
+        <option>Ascending</option>
+        <option>Descending</option>
+    </select>
+    <button type="submit">Sort</button>
 
+</form>
 
 
 
