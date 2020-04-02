@@ -1,5 +1,23 @@
 
+import os
+from werkzeug.utils import secure_filename
 
+app.config["IMAGE_UPLOADS"] = "/Users/derdesz/Desktop/projects/ask-mate-remotemates/static/pictures"
+app.config["ALLOWED_IMAGE"] = ["PNG", "JPG"]
 
 
 <a href="{{ url_for("edit_question", question_id=id) }}">Edit question</a>
+
+        if request.files:
+            image = request.files["image"]
+
+            image.save(os.path.join(app.config["IMAGE_UPLOADS"], image.filename))
+
+
+<form action="#" method="POST" enctype="multipart/form-data">
+
+    <label for="image">Select image:</label><br><br>
+    <input type="file"  name="image" id="image">
+    <button type="submit" ">Upload image</button>
+
+</form>

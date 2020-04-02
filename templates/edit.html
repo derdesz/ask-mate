@@ -4,3 +4,14 @@
 {% block title %}{{ current_data["title"] }}{% endblock %}
 {% block message %}{{ current_data["message"] }}{% endblock %}
 {% block button %}Edit question{% endblock %}
+
+
+
+
+<form action="#" method="POST" enctype="multipart/form-data">
+
+        <label for="image">Select image:</label><br><br>
+        <input type="file"  name="image" id="image">
+        <button href="{{ url_for("upload_image_existing_q", question_id=question_id) }}" type="submit" ">Upload image</button>
+
+</form>

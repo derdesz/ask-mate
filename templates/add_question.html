@@ -17,8 +17,21 @@
     <label for="message">Message</label><br><br>
     <textarea id="message" name="message" rows="6" cols="25">{% block message %}{% endblock %}</textarea><br><br>
 
-    <button type="submit">{% block button %}Add question{% endblock %}</button>
+    <button type="submit">{% block button %}Add question{% endblock %}</button><br><br><br><br>
+
 </form>
+
+{% block upload_image %}
+
+<form action="/question/upload_image" method="POST" enctype="multipart/form-data">
+
+        <label for="image">Select image:</label><br><br>
+        <input type="file"  name="image" id="image">
+        <button type="submit" ">Upload image</button>
+
+</form>
+
+{% endblock %}
 
 </body>
 </html>
