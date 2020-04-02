@@ -1,26 +1,6 @@
 id,submission_time,view_number,vote_number,title,message,image
-1,1493368154,29,13,How to make lists in Python?,"I am totally new to this, any hints?",
-2,1585839504.144191,15,9,Wordpress loading multiple jQuery Versions,"I developed a plugin that uses the jquery booklet plugin (http://builtbywill.com/booklet/#/) this plugin binds a function to $ so I cann call $('.myBook').booklet();
-
-I could easy managing the loading order with wp_enqueue_script so first I load jquery then I load booklet so everything is fine.
-
-BUT in my theme i also using jquery via webpack so the loading order is now following:
-
-jquery
-booklet
-app.js (bundled file with webpack, including jquery)",icon-2488093.png
-3,1493015432,1364,57,Drawing canvas with an image picked with Cordova Camera Plugin,"I'm getting an image from device and drawing a canvas with filters using Pixi JS. It works all well using computer to get an image. But when I'm on IOS, it throws errors such as cross origin issue, or that I'm trying to use an unknown format.
-
-This is the code I'm using to draw the image (that works on web/desktop but not cordova built ios app)",
-78,1585835457.296902,0,-4,xtez5454665gtbhrznzuj,etzjetzj,120200330YYF0.jpg
-18,1585835162.454085,0,9,próba,"yepppp
-
-blah blah balhhhh",91492735_1904547956344180_4923815087262662656_n.jpg
-88,1585820841.819995,0,-1,,, 
-43,1585832779.4847229,0,0,,,icon-2488093.png
-45,1585833879.067002,0,0,,,icon-2488093.png
-53,1585841089.792616,0,0,,,120200330YYF0.jpg
-90,1585841492.320218,0,0,,,icon-2488093.png
-8,1585841646.68736,0,0,,,icon-2488093.png
-59,1585841682.079243,0,0,,,icon-2488093.png
-33,1585842110.9344552,0,0,,,91492735_1904547956344180_4923815087262662656_n.jpg
+96,2020-04-02 18:10:17.596627,0,-4,Second Ipsum,In the known world this is the first time when people made machines which are better then them.,
+58,2020-04-02 18:20:17.596627,0,3,Make money with youtube videos,If you want to make easy money you can always start making videos where you show people whats in your bag beacause they think that is interesting.,tabletop.jpg
+100,2020-04-02 18:30:17.596627,0,8,Lorem Ipsum,I dont know what happened with the planet but this virus takes over the control from us.If you read this please help me.,
+41,2020-04-02 18:36:54.345270,0,7,World domination,If you think that you are better than the others think about that twice befor you make your final decision. You might be the worst or the best but no one cares.,
+80,2020-04-02 19:24:24.526701,0,3,safafsad3ef3grhhh,asfasfasfafsg34g3da,maci.png

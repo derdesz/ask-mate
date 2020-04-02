@@ -2,6 +2,8 @@ from flask import Flask, render_template, request, redirect, url_for
 import csv
 import data_manager
 import time
+from datetime import datetime
+
 app = Flask(__name__, static_folder='static')
 
 import os
@@ -9,7 +11,7 @@ from werkzeug.utils import secure_filename
 
 app = Flask(__name__, static_folder='static')
 
-app.config["IMAGE_UPLOADS"] = "/Users/derdesz/Desktop/projects/ask-mate-remotemates/static"
+app.config["IMAGE_UPLOADS"] = "/home/my_project/web/1st/ask-mate-remotemates/static"
 app.config["ALLOWED_IMAGE_EXTENSIONS"] = ["PNG", "JPG"]
 
 def allowed_image(filename):
@@ -27,6 +29,7 @@ def hello():
 
     return render_template("main.html")
 
+@app.route('/list/', methods=["POST","GET"])
 @app.route('/list', methods=["POST","GET"])
 def list():
     if request.method == "POST":
@@ -66,7 +69,8 @@ def display_question(question_id):
 
 @app.route("/list/add-question", methods=["POST", "GET"])
 def ask_question():
-    time_stample = str(time.time())
+    time_stample = time.time()
+    time_stample = str(datetime.fromtimestamp(time_stample))
     q_id = data_manager.create_id(data_manager.ALL_Q_ID)
     if request.method == "POST":
         if request.form:
@@ -99,7 +103,8 @@ def ask_question():
 @app.route("/question/<question_id>/new-answer", methods=["POST", "GET"])
 def new_answer(question_id):
     if request.method == "POST":
-        time_stample = str(time.time())
+        time_stample = time.time()
+        time_stample = str(datetime.fromtimestamp(time_stample))
         a_id = data_manager.create_id(data_manager.ALL_A_ID)
 
         answer = [a_id, time_stample, "0", question_id, request.form["message"], " "]
@@ -120,6 +125,7 @@ def edit_question(question_id):
 
     if request.method == "POST":
         time_stample = time.time()
+        time_stample = str(datetime.fromtimestamp(time_stample))
         if request.form:
             all_q_data[index]["title"] = request.form["title"]
             all_q_data[index]["message"] = request.form["message"]

@@ -41,7 +41,7 @@ def read_sorted_csv(filename, header, reverse):
         csv_reader = csv.DictReader(file)
         data = sorted(csv_reader, key=operator.itemgetter(header), reverse=reverse)
 
-        if header == "title" or header == "message":
+        if header == "title" or header == "message" or header == "submission_time":
             pass
         else:
             for row in data:

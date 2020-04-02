@@ -7,30 +7,22 @@
 
         table, th td {border: 1px solid black}
         #second_col {text-align: center}
-
+        .header {text-align: center}
+        tr {text-align: center}
     </style>
 </head>
 <body>
-<table id="table">
-    <th class="table">
+<table cellspacing="10">
     {% for elem in ["id","submission_time","view_number","vote_number","title","message","image"] %}
-        <td>{{ elem }}</td>
-    {% endfor %}
-    <th>
-        <td>ID</td>
-        <td>Submission Time</td>
-        <td>ID</td>
-        <td>ID</td>
-        <td>ID</td>
+    <th>{{ elem }}
     </th>
-    </th>
-
+     {% endfor %}
     {% for i in range(rows) %}
     <tr>
         <td id="first_col">{{ all_data[i]["id"] }}</td>
         <td id="second_col">{{ all_data[i]["submission_time"] }}</td>
         <td>{{ all_data[i]["view_number"] }}</td>
-        <td>{{ all_data[i]["vote_number"] }}<br><a href="{{ url_for("vote_up", question_id=all_data[i]["id"]) }}">Up</a><a href="{{ url_for("vote_down", question_id=all_data[i]["id"]) }}">Down</a></td>
+        <td>{{ all_data[i]["vote_number"] }}<br><a style= "margin:10px" href="{{ url_for("vote_up", question_id=all_data[i]["id"]) }}">Up</a><a href="{{ url_for("vote_down", question_id=all_data[i]["id"]) }}">Down</a></td>
         <td>{{ all_data[i]["title"] }}</td>
         <td><a href="{{ url_for("display_question", question_id=all_data[i]["id"]) }}">{{ all_data[i]["message"] }}</a></td>
         <td>{{ all_data[i]["image"] }}</td>
@@ -42,7 +34,7 @@
 
 
 
-<a href="/list/add-question">Add question</a>
+<a href="/list/add-question">Add question</a><br><br>
 
 <form name="sort" action="#" method="post">
     <select name="title">
