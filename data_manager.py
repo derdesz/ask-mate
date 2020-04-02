@@ -52,33 +52,15 @@ def read_sorted_csv(filename, header, reverse):
             all_data.append(rows)
         return all_data
 
+def create_id_list(data):
+    l = []
+    for row in data:
+        l.append(row["id"])
+    return l
 
 
 
 ALL_QUESTION_DATAS = read_csv('sample_data/question.csv')
 ALL_ANSWER_DATAS = read_csv('sample_data/answer.csv')
-ALL_Q_ID = ["1","2","3"]
-ALL_A_ID = ["1", "2", "3"]
-HEADERS = ALL_QUESTION_DATAS[0].keys()
-
-
-
-
-
-
-def main():
-
-
-    print(ALL_QUESTION_DATAS)
-    print("\n\n")
-    print(ALL_QUESTION_DATAS[1])
-    print("\n\n")
-    print(ALL_QUESTION_DATAS[0]["id"])
-    print("\n\n")
-    print(HEADERS)
-    print(ALL_QUESTION_DATAS)
-
-
-        
-if __name__ == '__main__':
-    main()
+ALL_Q_ID = create_id_list(read_csv('sample_data/question.csv'))
+ALL_A_ID = create_id_list(read_csv('sample_data/answer.csv'))
