@@ -59,7 +59,8 @@ def create_id_list(data):
     return l
 
 
-
+QUESTION_HEADERS = ["id", "submission_time", "view_number", "vote_number", "title", "message", "image"]
+ANSWER_HEADERS = ["id", "submission_time", "vote_number", "question_id", "message", "image"]
 ALL_QUESTION_DATAS = read_csv('sample_data/question.csv')
 ALL_ANSWER_DATAS = read_csv('sample_data/answer.csv')
 ALL_Q_ID = create_id_list(read_csv('sample_data/question.csv'))

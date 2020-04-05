@@ -40,7 +40,7 @@ def list():
             reversed = True
         all_q_data = data_manager.read_sorted_csv('sample_data/question.csv', header, reversed)
         data_manager.write_csv(all_q_data, 'sample_data/question.csv',
-                               ["id", "submission_time", "view_number", "vote_number", "title", "message", "image"])
+                               data_manager.QUESTION_HEADERS)
         return redirect(url_for("list"))
     else:
         all_question_datas = data_manager.read_csv('sample_data/question.csv')
@@ -76,6 +76,8 @@ def ask_question():
         if request.form:
             current_q_data = [q_id, time_stample, '0', '0', request.form["title"], request.form["message"], ' ']
             data_manager.add_element('sample_data/question.csv', current_q_data)
+            sorted_list = data_manager.read_sorted_csv('sample_data/question.csv', "submission_time", True)
+            data_manager.write_csv(sorted_list, 'sample_data/question.csv', data_manager.QUESTION_HEADERS)
         if request.files:
             image = request.files["image"]
             filename = image.filename
@@ -98,6 +100,33 @@ def ask_question():
 
     else:
         return render_template("add_question.html")
+
+
+@app.route("/list/add-answer-image/<string:question_id>/<string:answer_id>", methods=["GET","POST"])
+def upload_answer_image(question_id, answer_id):
+    if request.method == "POST":
+        all_a_data = data_manager.read_csv('sample_data/answer.csv')
+        for i in range(len(all_a_data)):
+            if all_a_data[i]["id"] == answer_id:
+                index = i
+
+        image = request.files["image"]
+        if image.filename == "":
+            print("image must have a filename")
+            return redirect(request.url)
+        if not allowed_image(image.filename):
+            print("That image extension is not allowed")
+            return redirect(request.url)
+        else:
+            filename = secure_filename(image.filename)
+            all_a_data[index]["image"] = filename
+            data_manager.write_csv(all_a_data, 'sample_data/answer.csv', data_manager.ANSWER_HEADERS)
+            image.save(os.path.join(app.config["IMAGE_UPLOADS"], filename))
+        return redirect(url_for("display_question", question_id=question_id))
+
+
+
+
 
 
 @app.route("/question/<question_id>/new-answer", methods=["POST", "GET"])
@@ -130,7 +159,8 @@ def edit_question(question_id):
             all_q_data[index]["title"] = request.form["title"]
             all_q_data[index]["message"] = request.form["message"]
             all_q_data[index]["submission_time"] = time_stample
-            data_manager.write_csv(all_q_data, 'sample_data/question.csv', ["id","submission_time","view_number","vote_number","title","message","image"])
+            data_manager.write_csv(all_q_data, 'sample_data/question.csv', data_manager.QUESTION_HEADERS)
+
         if request.files:
             image = request.files["image"]
             filename = image.filename
@@ -145,13 +175,19 @@ def edit_question(question_id):
                 all_q_data[index]["image"] = filename
                 all_q_data[index]["submission_time"] = time_stample
                 data_manager.write_csv(all_q_data, 'sample_data/question.csv',
-                                       ["id", "submission_time", "view_number", "vote_number", "title", "message",
-                                        "image"])
+                                       data_manager.QUESTION_HEADERS)
                 image.save(os.path.join(app.config["IMAGE_UPLOADS"], filename))
+        sorted_list = data_manager.read_sorted_csv('sample_data/question.csv', "submission_time", True)
+        data_manager.write_csv(sorted_list, 'sample_data/question.csv', data_manager.QUESTION_HEADERS)
         return redirect(url_for("display_question", question_id=question_id))
     else:
         return render_template("edit.html", current_data=current_data, question_id=question_id)
-        
+
+
+
+
+
+
 
 @app.route("/question/<question_id>/delete")
 def delete_question(question_id):
@@ -159,7 +195,7 @@ def delete_question(question_id):
     for i in range(len(all_q_data)):
         if question_id == all_q_data[i]["id"]:
             all_q_data.remove(all_q_data[i])
-            data_manager.write_csv(all_q_data, 'sample_data/question.csv', ["id","submission_time","view_number","vote_number","title","message","image"])
+            data_manager.write_csv(all_q_data, 'sample_data/question.csv', data_manager.QUESTION_HEADERS)
             return redirect(url_for("list"))
 
         
@@ -173,7 +209,7 @@ def delete_answer(answer_id):
             question_id = all_a_data[i]["question_id"]
             all_a_data.remove(all_a_data[i])
             data_manager.write_csv(all_a_data, 'sample_data/answer.csv',
-                                   ["id", "submission_time", "vote_number", "question_id", "message", "image"])
+                                   data_manager.ANSWER_HEADERS)
             return redirect(url_for("display_question", question_id=question_id))
 
 
@@ -183,7 +219,7 @@ def vote_up(question_id):
     for i in range(len(all_q_data)):
         if question_id == all_q_data[i]["id"]:
             all_q_data[i]["vote_number"] = str(int(all_q_data[i]["vote_number"]) + 1)
-            data_manager.write_csv(all_q_data, 'sample_data/question.csv', ["id","submission_time","view_number","vote_number","title","message","image"])
+            data_manager.write_csv(all_q_data, 'sample_data/question.csv', data_manager.QUESTION_HEADERS)
             return redirect(url_for("list"))
 
 
@@ -193,7 +229,7 @@ def vote_down(question_id):
     for i in range(len(all_q_data)):
         if question_id == all_q_data[i]["id"]:
             all_q_data[i]["vote_number"] = str(int(all_q_data[i]["vote_number"]) - 1)
-            data_manager.write_csv(all_q_data, 'sample_data/question.csv', ["id","submission_time","view_number","vote_number","title","message","image"])
+            data_manager.write_csv(all_q_data, 'sample_data/question.csv', data_manager.QUESTION_HEADERS)
             return redirect(url_for("list"))
 
 @app.route("/answer/<answer_id>/vote_up")
@@ -204,7 +240,7 @@ def vote_a_up(answer_id):
             question_id = all_a_data[i]["question_id"]
             all_a_data[i]["vote_number"] = str(int(all_a_data[i]["vote_number"]) + 1)
             data_manager.write_csv(all_a_data, 'sample_data/answer.csv',
-                                   ["id", "submission_time", "vote_number", "question_id", "message", "image"])
+                                   data_manager.ANSWER_HEADERS)
             return redirect(url_for("display_question", question_id=question_id))
 
 
@@ -216,7 +252,7 @@ def vote_a_down(answer_id):
             question_id = all_a_data[i]["question_id"]
             all_a_data[i]["vote_number"] = str(int(all_a_data[i]["vote_number"]) - 1)
             data_manager.write_csv(all_a_data, 'sample_data/answer.csv',
-                                   ["id", "submission_time", "vote_number", "question_id", "message", "image"])
+                                   data_manager.ANSWER_HEADERS)
             return redirect(url_for("display_question", question_id=question_id))
 
 @app.route("/list/sort")
@@ -228,7 +264,7 @@ def sort():
     else:
         reversed = False
     all_q_data = data_manager.read_sorted_csv('sample_data/question.csv', header, reversed)
-    data_manager.write_csv(all_q_data, 'sample_data/question.csv', ["id","submission_time","view_number","vote_number","title","message","image"])
+    data_manager.write_csv(all_q_data, 'sample_data/question.csv', data_manager.QUESTION_HEADERS)
     return redirect(url_for("list"))
 
 

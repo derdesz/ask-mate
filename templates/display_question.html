@@ -5,31 +5,46 @@
     <title>Display question</title>
     <style>
 
-        #text {width: 40%;}
+        #question {width: 40%;}
+        #answers {width: 40%;}
         #anchors {horiz-align: center}
         img {width: 300px}
-        #picture {float: right;padding-right: 30%}
+
 
     </style>
 </head>
 <body>
-    <div id='text'>
+    <div id='question'>
+            <img src="{{ url_for('static', filename=current_q_data["image"])}}" id="picture">
             <h5>Title:</h5>
             <p class="big_text">{{ current_q_data["title"] }}</p><br>
 
             <h5>Question:</h5>
             <p class="big_text">{{ current_q_data["message"] }}</p>
 
+    </div>
+
+    <div id="answers">
             <h5>Answer:</h5>
             {% for elem in current_a_data %}
                 <p class="big_text">{{ elem["message"] }}</p>
-                <p><a href="{{  url_for("delete_answer", answer_id=elem["id"]) }}">Delete answer</a></p><br>
+                <img src="{{ url_for('static', filename=elem["image"])}}" id="a_picture">
+                <p><a href="{{  url_for("delete_answer", answer_id=elem["id"]) }}">Delete answer</a></p> <br>
                 <p  style= "margin:10px" >{{ elem["vote_number"] }} points</p>
                 <p><a href="{{  url_for("vote_a_up", answer_id=elem["id"]) }}" style= "margin:10px" >Up</a><a href="{{  url_for("vote_a_down", answer_id=elem["id"]) }}">Down</a></p></a></p><br>
+
+
+            <form action="/list/add-answer-image/{{ id }}/{{ elem["id"] }}" method="POST" enctype="multipart/form-data">
+
+                <label for="image">Select image:</label><br><br>
+                <input type="file"  name="image" id="image">
+                <button href="{{ url_for("upload_answer_image", question_id=id, answer_id=elem["id"]) }}" type="submit" >Upload image</button>
+
+            </form>
             {% endfor %}
     </div>
 
-<img src="{{ url_for('static', filename=current_q_data["image"])}}" id="picture">
+
 
     <div id="anchors">
         <a href="{{ url_for("new_answer", question_id=id) }}" style= "margin:10px" >Add answer</a>
