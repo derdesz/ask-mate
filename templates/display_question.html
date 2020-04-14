@@ -34,7 +34,16 @@
                 {% if data.image %}
                 <img src="{{ url_for('static', filename=data.image)}}" id="a_picture">
                 {% endif %}
-                <p><a href="{{  url_for("delete_answer", answer_id=data.id, question_id=data.question_id) }}">Delete answer</a></p> <br>
+                <p>Answer comment:</p>
+                {% for row in comment_a_data %}
+                    {% if row.answer_id == data.id %}
+                        <p>Message: {{ row.message }} Submission_time:{{ row.submission_time }}</p>
+                    {% endif %}
+                {% endfor %}
+                <p><a href="{{  url_for("delete_answer", answer_id=data.id, question_id=data.question_id) }}">Delete answer</a>
+                    <a href="{{ url_for("add_a_comment", answer_id=data.id, question_id=data.question_id) }}" style= "margin:20px"> Add comment</a>
+                    <a href="{{ url_for("edit_answer", answer_id=data.id, question_id=data.question_id) }}">Edit answer</a>
+                </p><br>
                 <p  style= "margin:10px" >{{ data.vote_number }} points</p>
                 <p><a href="{{  url_for("vote_a_up", answer_id=data.id, question_id=data.question_id) }}" style= "margin:10px" >Up</a><a href="{{  url_for("vote_a_down", answer_id=data.id, question_id=data.question_id) }}">Down</a></p></a></p><br>
 
@@ -45,9 +54,11 @@
                 <input type="file"  name="image" id="image">
                 <button href="{{ url_for("upload_answer_image", question_id=id, answer_id=data.id) }}" type="submit" >Upload image</button>
 
+
+
             </form>
             {% endfor %}
-    </div>
+    </div><br><br><br>
 
 
 
@@ -55,8 +66,21 @@
         <a href="{{ url_for("new_answer", question_id=id) }}" style= "margin:10px" >Add answer</a>
         <a href="{{ url_for("edit_question", question_id=id) }}" style= "margin:10px" >Edit question</a>
         <a href="{{ url_for("delete_question", question_id=id) }}" style= "margin:10px" >Delete question</a>
+        <a href="{{ url_for("add_q_comment", question_id=id) }}" style= "margin:10px" >Add comment</a>
         <br><br><br>
-        <a href="{{ url_for("list")}}">List questions</a>
+        <a href="{{ url_for("list")}}">List questions</a><br><br>
     </div>
+
+
+    <div>
+
+        <label><strong>Comments:</strong></label><br><br>
+        {% for row in comment_q_data %}
+            <p>Message: {{ row["message"] }}</p>
+            <p>Submission time: {{ row["submission_time"] }}</p><br><br>
+        {% endfor %}
+
+    </div>
+
 </body>
 </html>

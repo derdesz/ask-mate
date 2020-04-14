@@ -10,7 +10,7 @@ def get_connection_string():
 
 
     user_name = 'getulus'
-    password = ''
+    password = 'Stomach1'
     host = 'localhost'
     database_name = 'online_test'
 

@@ -64,7 +64,9 @@ def display_question(question_id):
     current_q_data = database_manager.get_current_question(question_id)
     current_a_data = database_manager.get_current_answer(question_id)
 
-    return render_template("display_question.html", id=question_id, current_a_data=current_a_data, current_q_data=current_q_data)
+    comment_a_data = database_manager.get_a_comment()
+    comment_q_data = database_manager.get_comment("question_id", question_id)
+    return render_template("display_question.html", comment_a_data=comment_a_data, comment_q_data=comment_q_data, id=question_id, current_a_data=current_a_data, current_q_data=current_q_data)
 
 
 @app.route("/list/add-question", methods=["POST", "GET"])
@@ -102,6 +104,22 @@ def ask_question():
         return render_template("add_question.html")
 
 
+
+
+@app.route("/list/question/<string:question_id>/comment", methods=["POST", "GET"])
+def add_q_comment(question_id):
+    if request.method == "POST":
+        time_stample = time.time()
+        time_stample = datetime.fromtimestamp(time_stample)
+        id = data_manager.create_id()
+        database_manager.add_question_comment(id, question_id, request.form["comment"], time_stample)
+        return redirect(url_for("display_question", question_id=question_id))
+    else:
+        return render_template("add_comment.html", question_id=question_id)
+
+
+
+
 @app.route("/list/add-answer-image/<string:question_id>/<string:answer_id>", methods=["GET","POST"])
 def upload_answer_image(question_id, answer_id):
     time_stample = time.time()
@@ -136,6 +154,35 @@ def new_answer(question_id):
         return render_template("new_answer.html")
 
 
+
+@app.route("/question/<question_id>/answer/<answer_id>/edit", methods=["POST", "GET"])
+def edit_answer(answer_id, question_id):
+    if request.method == "POST":
+        database_manager.edit_answer(answer_id, request.form["message"])
+        return redirect(url_for("display_question", question_id=question_id))
+    else:
+        current_answer_data = database_manager.get_current_answer(question_id)
+        return render_template("edit_answer.html", current_answer_data=current_answer_data)
+
+
+
+
+
+@app.route("/question/<question_id>/answer/<answer_id>/new-comment", methods=["POST", "GET"])
+def add_a_comment(answer_id, question_id):
+    if request.method == "POST":
+        time_stample = time.time()
+        time_stample = datetime.fromtimestamp(time_stample)
+        id = data_manager.create_id()
+        database_manager.add_answer_comment(id, answer_id, request.form["comment"], time_stample)
+
+        return redirect(url_for("display_question", question_id=question_id))
+    else:
+        return render_template("add_comment.html", question_id=question_id)
+
+
+
+
 @app.route("/question/<question_id>/edit", methods=["POST","GET"])
 def edit_question(question_id):
 
@@ -162,7 +209,7 @@ def edit_question(question_id):
         return redirect(url_for("display_question", question_id=question_id))
     else:
         current_data = database_manager.get_current_question(question_id)
-        return render_template("edit.html", current_data=current_data, question_id=question_id)
+        return render_template("edit_question.html", current_data=current_data, question_id=question_id)
 
 
 
