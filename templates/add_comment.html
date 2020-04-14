@@ -2,17 +2,17 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Add question comment</title>
+    {% block title %}<title>Add question comment</title>{% endblock %}
 </head>
 <body>
 
 <form method="post" action="#" name="add_comment">
-    <label for="comment">Add comment</label><br>
-    <textarea id="comment" name="comment"></textarea><br>
+    <label for="comment">{% block label %}Add comment{% endblock %}</label><br>
+    <textarea id="comment" name="comment">{% block message %}{% endblock %}</textarea><br>
     <button type="submit">Add</button><br><br>
 </form>
 
-<a href="{{ url_for("display_question", question_id=question_id) }}">Back to question page</a>
+
 
 </body>
 </html>

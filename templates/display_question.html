@@ -5,8 +5,8 @@
     <title>Display question</title>
     <style>
 
-        #question {width: 40%;}
-        #answers {width: 40%;}
+        #question {width: 60%;}
+        #answers {width: 60%;}
         #anchors {horiz-align: center}
         img {width: 300px}
 
@@ -37,7 +37,8 @@
                 <p>Answer comment:</p>
                 {% for row in comment_a_data %}
                     {% if row.answer_id == data.id %}
-                        <p>Message: {{ row.message }} Submission_time:{{ row.submission_time }}</p>
+                        <p>Message: {{ row.message }} Submission_time:{{ row.submission_time }}<a href="{{  url_for("edit_comment", comment_id=row.id) }}">Edit comment</a></p>
+                        <p>Edited: {{ row.edited_count }}</p>
                     {% endif %}
                 {% endfor %}
                 <p><a href="{{  url_for("delete_answer", answer_id=data.id, question_id=data.question_id) }}">Delete answer</a>
@@ -77,7 +78,8 @@
         <label><strong>Comments:</strong></label><br><br>
         {% for row in comment_q_data %}
             <p>Message: {{ row["message"] }}</p>
-            <p>Submission time: {{ row["submission_time"] }}</p><br><br>
+            <p>Submission time: {{ row["submission_time"] }}<a href="{{  url_for("edit_comment", comment_id=row.id) }}">Edit comment</a></p>
+            <p>Edited: {{ row.edited_count }}</p><br><br>
         {% endfor %}
 
     </div>

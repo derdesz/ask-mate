@@ -64,7 +64,7 @@ def display_question(question_id):
     current_q_data = database_manager.get_current_question(question_id)
     current_a_data = database_manager.get_current_answer(question_id)
 
-    comment_a_data = database_manager.get_a_comment()
+    comment_a_data = database_manager.get_all_comment()
     comment_q_data = database_manager.get_comment("question_id", question_id)
     return render_template("display_question.html", comment_a_data=comment_a_data, comment_q_data=comment_q_data, id=question_id, current_a_data=current_a_data, current_q_data=current_q_data)
 
@@ -180,6 +180,25 @@ def add_a_comment(answer_id, question_id):
     else:
         return render_template("add_comment.html", question_id=question_id)
 
+
+@app.route("/comment/<comment_id>/edit", methods=["POST", "GET"])
+def edit_comment(comment_id):
+    if request.method == "POST":
+        time_stample = time.time()
+        time_stample = datetime.fromtimestamp(time_stample)
+        database_manager.edit_comment(request.form["comment"], time_stample, comment_id)
+        answer_id = database_manager.get_current_comment(comment_id)[0]["answer_id"]
+
+        if answer_id:
+            question_id = database_manager.questionID_by_answerID(answer_id)[0]["question_id"]
+        else:
+            question_id = database_manager.get_current_comment(comment_id)[0]["question_id"]
+
+
+        return redirect(url_for("display_question", question_id=question_id))
+    else:
+        current_comment = database_manager.get_current_comment(comment_id)
+        return render_template("edit_comment.html", current_comment=current_comment, comment_id=comment_id)
 
 
 

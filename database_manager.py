@@ -38,6 +38,9 @@ def delete_question(cursor: RealDictCursor, q_id) -> list:
     cursor.execute("delete from answer where question_id = '%s' " % q_id)
 
 
+
+
+
 """
 ANSWERS
 """
@@ -60,6 +63,10 @@ def delete_answer(cursor: RealDictCursor, a_id) -> list:
 def edit_answer(cursor: RealDictCursor, a_id, message) -> list:
     cursor.execute("update answer set message = '%s' where id = '%s' " % (message, a_id))
 
+@database.connection_handler
+def questionID_by_answerID(cursor: RealDictCursor, a_id) -> list:
+    cursor.execute("select * from answer where id = '%s'" % a_id)
+    return cursor.fetchall()
 
 """
 IMAGE
@@ -99,11 +106,16 @@ COMMENT
 """
 @database.connection_handler
 def get_comment(cursor: RealDictCursor, id_type, id ) -> list:
-    cursor.execute("select message, submission_time from comment where {} = '%s' ".format(id_type) % id)
+    cursor.execute("select * from comment where {} = '%s' ".format(id_type) % id)
     return cursor.fetchall()
 
 @database.connection_handler
-def get_a_comment(cursor: RealDictCursor) -> list:
+def get_current_comment(cursor: RealDictCursor, id) -> list:
+    cursor.execute("select * from comment where id = '%s' " % id)
+    return cursor.fetchall()
+
+@database.connection_handler
+def get_all_comment(cursor: RealDictCursor) -> list:
     cursor.execute("select * from comment")
     return cursor.fetchall()
 
@@ -114,3 +126,7 @@ def add_question_comment(cursor: RealDictCursor, own_id, question_id, message, t
 @database.connection_handler
 def add_answer_comment(cursor: RealDictCursor, own_id, answer_id, message, time, ) -> list:
     cursor.execute("insert into comment values('%s', NULL, '%s',  '%s', '%s',  0) " % (own_id, answer_id, message, time))
+
+@database.connection_handler
+def edit_comment(cursor: RealDictCursor, message, time, comment_id) -> list:
+    cursor.execute("update comment set message = '%s', submission_time = '%s', edited_count = edited_count + 1 where id = '%s'" % (message, time, comment_id))
