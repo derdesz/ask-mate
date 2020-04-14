@@ -15,30 +15,35 @@
 </head>
 <body>
     <div id='question'>
-            <img src="{{ url_for('static', filename=current_q_data["image"])}}" id="picture">
+        {% for data in current_q_data %}
+            {% if data.image %}
+                <img src="{{ url_for('static', filename=data.image) }}" id="picture">
+            {% endif %}
             <h5>Title:</h5>
-            <p class="big_text">{{ current_q_data["title"] }}</p><br>
+            <p class="big_text">{{ data.title }}</p><br>
 
             <h5>Question:</h5>
-            <p class="big_text">{{ current_q_data["message"] }}</p>
-
+            <p class="big_text">{{ data.message }}</p>
+        {% endfor %}
     </div>
 
     <div id="answers">
             <h5>Answer:</h5>
-            {% for elem in current_a_data %}
-                <p class="big_text">{{ elem["message"] }}</p>
-                <img src="{{ url_for('static', filename=elem["image"])}}" id="a_picture">
-                <p><a href="{{  url_for("delete_answer", answer_id=elem["id"]) }}">Delete answer</a></p> <br>
-                <p  style= "margin:10px" >{{ elem["vote_number"] }} points</p>
-                <p><a href="{{  url_for("vote_a_up", answer_id=elem["id"]) }}" style= "margin:10px" >Up</a><a href="{{  url_for("vote_a_down", answer_id=elem["id"]) }}">Down</a></p></a></p><br>
+            {% for data in current_a_data %}
+                <p class="big_text">{{ data.message }}</p>
+                {% if data.image %}
+                <img src="{{ url_for('static', filename=data.image)}}" id="a_picture">
+                {% endif %}
+                <p><a href="{{  url_for("delete_answer", answer_id=data.id, question_id=data.question_id) }}">Delete answer</a></p> <br>
+                <p  style= "margin:10px" >{{ data.vote_number }} points</p>
+                <p><a href="{{  url_for("vote_a_up", answer_id=data.id, question_id=data.question_id) }}" style= "margin:10px" >Up</a><a href="{{  url_for("vote_a_down", answer_id=data.id, question_id=data.question_id) }}">Down</a></p></a></p><br>
 
 
-            <form action="/list/add-answer-image/{{ id }}/{{ elem["id"] }}" method="POST" enctype="multipart/form-data">
+            <form action="/list/add-answer-image/{{ id }}/{{ data.id }}" method="POST" enctype="multipart/form-data">
 
                 <label for="image">Select image:</label><br><br>
                 <input type="file"  name="image" id="image">
-                <button href="{{ url_for("upload_answer_image", question_id=id, answer_id=elem["id"]) }}" type="submit" >Upload image</button>
+                <button href="{{ url_for("upload_answer_image", question_id=id, answer_id=data.id) }}" type="submit" >Upload image</button>
 
             </form>
             {% endfor %}

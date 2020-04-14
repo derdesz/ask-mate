@@ -12,6 +12,7 @@
     </style>
 </head>
 <body>
+
     <table>
     {% for elem in ["id","submission_time","view_number","vote_number","title","message","image"] %}
     <th>{{ elem }}</th>
@@ -30,28 +31,8 @@
         </tr>
     {% endfor %}
 
-    </table><br><br>
+    </table>
 
-
-
-<a href="/list/add-question">Add question</a><br><br>
-
-<form name="sort" action="#" method="post">
-    <select name="title">
-        <option>id</option>
-        <option>submission_time</option>
-        <option>message</option>
-        <option>view_number</option>
-        <option>vote_number</option>
-        <option>title</option>
-    </select>
-    <select name="way">
-        <option>Ascending</option>
-        <option>Descending</option>
-    </select>
-    <button type="submit">Sort</button>
-
-</form>
 
 
 

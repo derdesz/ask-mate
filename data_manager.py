@@ -1,15 +1,19 @@
 import csv
 import random
 import operator
+import database_manager
 
 
-def create_id(id_type):
-    id = 0
-    while id not in id_type:
-        id = str(random.randint(1, 100))
-        if id not in id_type:
-            id_type.append(id)
-            return id
+def create_id():
+    """
+    all_id = database_manager.get_all_q_id()
+    all_id_list = []
+    for data in all_id:
+        all_id_list.append(data.id)
+    """
+    id = random.randint(1, 10000)
+    return id
+
 
 
 

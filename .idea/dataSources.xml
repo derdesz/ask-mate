@@ -13,5 +13,11 @@
       <jdbc-driver>org.postgresql.Driver</jdbc-driver>
       <jdbc-url>jdbc:postgresql://localhost:5432/getulus</jdbc-url>
     </data-source>
+    <data-source source="LOCAL" name="getulus@test" uuid="cec6eb7a-f8f6-4eb8-96e9-98097e4f6097">
+      <driver-ref>postgresql</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>org.postgresql.Driver</jdbc-driver>
+      <jdbc-url>jdbc:postgresql://localhost:5432/online_test</jdbc-url>
+    </data-source>
   </component>
 </project>
