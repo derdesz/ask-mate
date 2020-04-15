@@ -5,6 +5,8 @@ import time
 from datetime import datetime
 import database_manager
 
+
+
 app = Flask(__name__, static_folder='static')
 
 import os
@@ -303,20 +305,26 @@ def delete_comment(comment_id):
 @app.route("/question/<question_id>/new-tag", methods=["POST", "GET"])
 def add_tag(question_id):
     id = data_manager.create_id()
-    print(id)
+    used_tags = [tag["name"] for tag in database_manager.get_tag_for_question(question_id)]
+
     if request.method == "POST":
-        if request.form == "new_tag":
+        if request.form["add_new_tag"] in used_tags:
+            pass
+        else:
             database_manager.add_tag(id, request.form["add_new_tag"])
             database_manager.add_to_question_tag(question_id, id)
 
-
+        if request.form["tags"] in used_tags:
+            pass
         else:
-            id = database_manager.tagID_by_tagNAME(request.form["tags"])
+            id = database_manager.tagID_by_tagNAME(request.form["tags"])[0]["id"]
             database_manager.add_to_question_tag(question_id, id)
+
         return redirect(url_for("display_question", question_id=question_id))
+
     else:
-        tags = database_manager.get_all_tags()
-        return render_template("tags.html", tags=tags)
+        all_tags = database_manager.get_all_tags()
+        return render_template("tags.html", tags=all_tags)
 
 
 

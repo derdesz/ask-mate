@@ -10,17 +10,15 @@
 
         <label for="tag">Add tag</label>
         <textarea id="tag" name="add_new_tag"></textarea>
-        <button type="submit">Add new</button>
 
-    </form>
-
-
-    <form action="#" method="POST" id="optional_tag" name="optional_tag">
         <select name="tags">
-        {% for tag in tags %}
-           <option> {{ tag.name }} </option>
-        {% endfor %}
+
+            {% for tag in tags %}
+
+            <option> {{ tag.name }} </option>
+            {% endfor %}
         </select>
+
         <button type="submit">Add</button>
 
     </form>

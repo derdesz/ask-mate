@@ -167,3 +167,4 @@ def tagID_by_tagNAME(cursor: RealDictCursor, name) -> list:
 def get_tag_for_question(cursor: RealDictCursor, q_id) -> list:
     cursor.execute("SELECT * FROM tag INNER JOIN question_tag ON tag.id = question_tag.tag_id WHERE question_id = '%s' " % q_id)
     return cursor.fetchall()
+
