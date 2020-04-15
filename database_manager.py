@@ -144,7 +144,7 @@ TAGS
 """
 @database.connection_handler
 def get_all_tags(cursor: RealDictCursor) -> list:
-    cursor.execute("SELECT name FROM tag")
+    cursor.execute("SELECT * FROM tag")
     return cursor.fetchall()
 
 
@@ -167,4 +167,9 @@ def tagID_by_tagNAME(cursor: RealDictCursor, name) -> list:
 def get_tag_for_question(cursor: RealDictCursor, q_id) -> list:
     cursor.execute("SELECT * FROM tag INNER JOIN question_tag ON tag.id = question_tag.tag_id WHERE question_id = '%s' " % q_id)
     return cursor.fetchall()
+
+
+@database.connection_handler
+def delete_question_tag(cursor: RealDictCursor, q_id, tag_id) -> list:
+    cursor.execute("DELETE FROM question_tag WHERE tag_id = '%s' and question_id = '%s'" % (tag_id, q_id))
 

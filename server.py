@@ -308,23 +308,33 @@ def add_tag(question_id):
     used_tags = [tag["name"] for tag in database_manager.get_tag_for_question(question_id)]
 
     if request.method == "POST":
-        if request.form["add_new_tag"] in used_tags:
-            pass
-        else:
-            database_manager.add_tag(id, request.form["add_new_tag"])
-            database_manager.add_to_question_tag(question_id, id)
+        if request.form["add_new_tag"]:
+            if request.form["add_new_tag"] in used_tags:
+                pass
+            else:
+                database_manager.add_tag(id, request.form["add_new_tag"])
+                database_manager.add_to_question_tag(question_id, id)
 
-        if request.form["tags"] in used_tags:
-            pass
         else:
-            id = database_manager.tagID_by_tagNAME(request.form["tags"])[0]["id"]
-            database_manager.add_to_question_tag(question_id, id)
+            if request.form["tags"] in used_tags:
+                pass
+            else:
+                id = database_manager.tagID_by_tagNAME(request.form["tags"])[0]["id"]
+                database_manager.add_to_question_tag(question_id, id)
 
         return redirect(url_for("display_question", question_id=question_id))
 
     else:
         all_tags = database_manager.get_all_tags()
         return render_template("tags.html", tags=all_tags)
+
+
+
+@app.route("/question/<question_id>/tag/<tag_id>/delete")
+def delete_tag(question_id, tag_id):
+    database_manager.delete_question_tag(question_id, tag_id)
+    return redirect(url_for("display_question", question_id=question_id))
+
 
 
 
