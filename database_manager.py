@@ -57,7 +57,9 @@ def get_current_answer(cursor: RealDictCursor, q_id) -> list:
 
 @database.connection_handler
 def delete_answer(cursor: RealDictCursor, a_id) -> list:
+    cursor.execute("delete from comment where answer_id = '%s' " % a_id)
     cursor.execute("delete from answer where id = '%s' " % a_id)
+
 
 @database.connection_handler
 def edit_answer(cursor: RealDictCursor, a_id, message) -> list:
@@ -130,3 +132,38 @@ def add_answer_comment(cursor: RealDictCursor, own_id, answer_id, message, time,
 @database.connection_handler
 def edit_comment(cursor: RealDictCursor, message, time, comment_id) -> list:
     cursor.execute("update comment set message = '%s', submission_time = '%s', edited_count = edited_count + 1 where id = '%s'" % (message, time, comment_id))
+
+
+@database.connection_handler
+def delete_comment(cursor: RealDictCursor, comment_id) -> list:
+    cursor.execute("DELETE FROM comment WHERE id = '%s'" % comment_id)
+
+
+"""
+TAGS
+"""
+@database.connection_handler
+def get_all_tags(cursor: RealDictCursor) -> list:
+    cursor.execute("SELECT name FROM tag")
+    return cursor.fetchall()
+
+
+@database.connection_handler
+def add_tag(cursor: RealDictCursor, tag_id, tag) -> list:
+    cursor.execute("INSERT INTO tag VALUES ('%s', '%s')" % (tag_id, tag))
+
+
+@database.connection_handler
+def add_to_question_tag(cursor: RealDictCursor, q_id, tag_id) -> list:
+    cursor.execute("INSERT INTO question_tag VALUES ('%s', '%s')" % (q_id, tag_id))
+
+@database.connection_handler
+def tagID_by_tagNAME(cursor: RealDictCursor, name) -> list:
+    cursor.execute("SELECT id FROM tag WHERE name = '%s' " % name)
+    return cursor.fetchall()
+
+
+@database.connection_handler
+def get_tag_for_question(cursor: RealDictCursor, q_id) -> list:
+    cursor.execute("SELECT * FROM tag INNER JOIN question_tag ON tag.id = question_tag.tag_id WHERE question_id = '%s' " % q_id)
+    return cursor.fetchall()

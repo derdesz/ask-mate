@@ -66,7 +66,12 @@ def display_question(question_id):
 
     comment_a_data = database_manager.get_all_comment()
     comment_q_data = database_manager.get_comment("question_id", question_id)
-    return render_template("display_question.html", comment_a_data=comment_a_data, comment_q_data=comment_q_data, id=question_id, current_a_data=current_a_data, current_q_data=current_q_data)
+
+    all_tags = database_manager.get_tag_for_question(question_id)
+
+    return render_template("display_question.html", comment_a_data=comment_a_data,
+                           comment_q_data=comment_q_data, id=question_id, current_a_data=current_a_data,
+                           current_q_data=current_q_data, all_tags=all_tags)
 
 
 @app.route("/list/add-question", methods=["POST", "GET"])
@@ -280,6 +285,38 @@ def sort():
     all_q_data = data_manager.read_sorted_csv('sample_data/question.csv', header, reversed)
     data_manager.write_csv(all_q_data, 'sample_data/question.csv', data_manager.QUESTION_HEADERS)
     return redirect(url_for("list"))
+
+
+@app.route("/comments/<comment_id>/delete")
+def delete_comment(comment_id):
+    answer_id = database_manager.get_current_comment(comment_id)[0]["answer_id"]
+
+    if answer_id:
+        question_id = database_manager.questionID_by_answerID(answer_id)[0]["question_id"]
+    else:
+        question_id = database_manager.get_current_comment(comment_id)[0]["question_id"]
+
+    database_manager.delete_comment(comment_id)
+    return redirect(url_for("display_question", question_id=question_id))
+
+
+@app.route("/question/<question_id>/new-tag", methods=["POST", "GET"])
+def add_tag(question_id):
+    id = data_manager.create_id()
+    print(id)
+    if request.method == "POST":
+        if request.form == "new_tag":
+            database_manager.add_tag(id, request.form["add_new_tag"])
+            database_manager.add_to_question_tag(question_id, id)
+
+
+        else:
+            id = database_manager.tagID_by_tagNAME(request.form["tags"])
+            database_manager.add_to_question_tag(question_id, id)
+        return redirect(url_for("display_question", question_id=question_id))
+    else:
+        tags = database_manager.get_all_tags()
+        return render_template("tags.html", tags=tags)
 
 
 
