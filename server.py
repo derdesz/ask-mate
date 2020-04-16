@@ -34,14 +34,6 @@ def test_site():
     return render_template("test.html", datas=datas)
 
 
-@app.route("/", methods=["POST", "GET"])
-def hello():
-    if request.method == "POST":
-        searched_word = request.form["search"]
-        return redirect(url_for("search_question", search_phrase=searched_word))
-    else:
-        last_5_questions = database_manager.get_last_5_questions()
-        return render_template("main.html", last_5_questions=last_5_questions)
 
 @app.route("/", methods=["POST", "GET"])
 def hello():
