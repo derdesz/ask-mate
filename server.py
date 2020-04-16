@@ -51,7 +51,7 @@ def hello():
 def search_question(search_phrase):
     search_result_q = database_manager.searched_phrase_q(search_phrase)
     search_result_a = database_manager.searched_phrase_a(search_phrase)
-    return render_template("search_result.html", search_result_q=search_result_q, search_result_a=search_result_a)
+    return render_template("search_result.html", search_result_q=search_result_q, search_result_a=search_result_a, search_phrase=search_phrase)
 
 
 @app.route('/list/', methods=["POST","GET"])

@@ -3,6 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <title>Search result</title>
+
+    <style>
+        table, th td {border: 1px solid black}
+        tr {text-align: center}
+    </style>
 </head>
 <body>
 
@@ -15,20 +20,45 @@
     {% for row in search_result_q %}
         <tr>
             <td id="first_col">{{ row.id }}</td>
-            <td>{{ row.title }}</td>
-            <td>{{ row.message }}</td>
+            <td>
+                {% for part in row.title.split() %}
+                    {% if search_phrase.lower() in part.lower() %}
+                        <mark>{{ part }}</mark>
+                    {% else %}
+                        {{ part }}
+                    {% endif %}
+                {% endfor %}
+            </td>
+            <td>
+                {% for part in row.message.split() %}
+                    {% if search_phrase.lower() in part.lower() %}
+                        <mark>{{ part }}</mark>
+                    {% else %}
+                        {{ part }}
+                    {% endif %}
+                {% endfor %}
+
+            </td>
         </tr>
     {% endfor %}
 </table>
 <table>
     <h4>Answers:</h4>
-    {% for elem in ["id","title","message"] %}
+    {% for elem in ["id","message", "question ID"] %}
     <th>{{ elem }}</th>
     {% endfor %}
     {% for row in search_result_a %}
         <tr>
             <td id="first_col">{{ row.id }}</td>
-            <td>{{ row.message }}</td>
+            <td>
+                {% for part in row.message.split() %}
+                    {% if search_phrase.lower() in part.lower() %}
+                        <mark>{{ part }}</mark>
+                    {% else %}
+                        {{ part }}
+                    {% endif %}
+                {% endfor %}
+            </td>
             <td>{{ row.question_id }}</td>
         </tr>
     {% endfor %}
