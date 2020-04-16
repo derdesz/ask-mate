@@ -199,8 +199,5 @@ def searched_phrase_a(cursor: RealDictCursor, search_phrase) -> list:
 def get_last_5_questions(cursor: RealDictCursor) -> list:
     cursor.execute("select message, submission_time from question order by submission_time DESC limit 6")
     return cursor.fetchall()
-<<<<<<< HEAD
-=======
 
 #question.message, question.title, answer.message, question.id, answer.id
->>>>>>> 94bdbed18c2f1f3470ca4b30c3a85253d356ddd5

@@ -43,8 +43,6 @@ def hello():
         last_5_questions = database_manager.get_last_5_questions()
         return render_template("main.html", last_5_questions=last_5_questions)
 
-<<<<<<< HEAD
-=======
 @app.route("/", methods=["POST", "GET"])
 def hello():
     if request.method == "POST":
@@ -54,18 +52,12 @@ def hello():
         last_5_questions = database_manager.get_last_5_questions()
         return render_template("main.html", last_5_questions=last_5_questions)
 
->>>>>>> 94bdbed18c2f1f3470ca4b30c3a85253d356ddd5
 
 @app.route("/search?q=<search_phrase>")
 def search_question(search_phrase):
     search_result_q = database_manager.searched_phrase_q(search_phrase)
     search_result_a = database_manager.searched_phrase_a(search_phrase)
-<<<<<<< HEAD
-    return render_template("search_result.html", search_result_q=search_result_q, search_result_a=search_result_a,
-                           search_phrase=search_phrase)
-=======
     return render_template("search_result.html", search_result_q=search_result_q, search_result_a=search_result_a, search_phrase=search_phrase)
->>>>>>> 94bdbed18c2f1f3470ca4b30c3a85253d356ddd5
 
 
 @app.route('/list/', methods=["POST", "GET"])
@@ -336,10 +328,6 @@ def add_tag(question_id):
     else:
         all_tags = database_manager.get_all_tags()
         return render_template("tags.html", tags=all_tags)
-<<<<<<< HEAD
-=======
-
->>>>>>> 94bdbed18c2f1f3470ca4b30c3a85253d356ddd5
 
 
 @app.route("/question/<question_id>/tag/<tag_id>/delete")
