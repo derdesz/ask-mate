@@ -6,61 +6,94 @@
     <style>
 
         #question {width: 60%;}
-        #answers {width: 60%;}
+        #answers {width: 60%; border: 1px crimson}
         #anchors {horiz-align: center}
         img {width: 300px}
+        #comments {border: 1px crimson; width: 400px}
+        body {background-color: gainsboro;
+            padding-top: 30px;
+        }
+        #tag {text-decoration: underline dotted }
+        #add_tag {padding-top: 10px}
+        #question {border: 1px solid black; padding-left: 10px;}
+        .small-headline { text-decoration: underline}
+        #anchors {padding-top: 10px}
 
 
     </style>
 </head>
 <body>
-    <div id='question'>
+    <div id='question_image'>
         {% for data in current_q_data %}
             {% if data.image %}
                 <img src="{{ url_for('static', filename=data.image) }}" id="picture">
             {% endif %}
-            <h5>Title:</h5>
+            <h2 class="small-headline">Title:</h2>
             <p class="big_text">{{ data.title }}</p>
+    </div>
+
+
+    <div id="tags">
+            <table>
+
             {% for tag in all_tags %}
-
-                <p> {{ tag.name }} </p>
-
+                    <td id="tag">tags: </td>
+                    <td style="color: firebrick": chocolate"> {{ tag.name }}</td>
+                    <td style="color: #dc143c;"><a href="{{ url_for("delete_tag", question_id=id, tag_id=tag.id) }}">X</a></td>
              {% endfor %}
+            </tr>
+            </table>
+    </div>
 
 
+    <div id="add_tag">
 
-            <h5>Question:</h5>
+        <a href="{{ url_for("add_tag", question_id=id) }}">Add tag</a><br><br>
+
+    </div>
+
+
+    <div id="question">
+            <h3>Question:</h3>
             <p class="big_text">{{ data.message }}</p>
         {% endfor %}
     </div>
 
-    <div id="q_tag">
-
-        <a href="{{ url_for("add_tag", question_id=id) }}">Add tag</a>
-
+    <div id="anchors">
+        <a href="{{ url_for("new_answer", question_id=id) }}" style= "margin:10px" >Add answer</a>
+        <a href="{{ url_for("edit_question", question_id=id) }}" style= "margin:10px" >Edit question</a>
+        <a href="{{ url_for("delete_question", question_id=id) }}" style= "margin:10px" >Delete question</a>
+        <a href="{{ url_for("add_q_comment", question_id=id) }}" style= "margin:10px" >Add comment</a>
+        <a href="{{ url_for("list")}}" style="margin: 500px">List questions</a><br><br>
     </div>
 
     <div id="answers">
-            <h5>Answer:</h5>
-            {% for data in current_a_data %}
+            <h3 class="small-headline">Answers:</h3>
+            {% for data in all_a_data %}
+                <h4>Answer: {{ data.id }}</h4>
                 <p class="big_text">{{ data.message }}</p>
                 {% if data.image %}
                 <img src="{{ url_for('static', filename=data.image)}}" id="a_picture">
                 {% endif %}
-                <p>Answer comment:</p>
-                {% for row in comment_a_data %}
-                    {% if row.answer_id == data.id %}
-                        <p>Message: {{ row.message }} Submission_time:{{ row.submission_time }}<a href="{{  url_for("edit_comment", comment_id=row.id) }}">Edit comment</a>
-                        <a href="{{ url_for("delete_comment", comment_id=row.id) }}">Delete comment</a></p>
-                        <p>Edited: {{ row.edited_count }}</p>
-                    {% endif %}
-                {% endfor %}
+
                 <p><a href="{{  url_for("delete_answer", answer_id=data.id, question_id=data.question_id) }}">Delete answer</a>
                     <a href="{{ url_for("add_a_comment", answer_id=data.id, question_id=data.question_id) }}" style= "margin:20px"> Add comment</a>
                     <a href="{{ url_for("edit_answer", answer_id=data.id, question_id=data.question_id) }}">Edit answer</a>
                 </p><br>
-                <p  style= "margin:10px" >{{ data.vote_number }} points</p>
-                <p><a href="{{  url_for("vote_a_up", answer_id=data.id, question_id=data.question_id) }}" style= "margin:10px" >Up</a><a href="{{  url_for("vote_a_down", answer_id=data.id, question_id=data.question_id) }}">Down</a></p></a></p><br>
+
+                <p><strong> Answer comments:</strong></p>
+                {% for row in comment_a_data %}
+                    {% if row.answer_id == data.id %}
+                        <p>Message: {{ row.message }} Submission_time:{{ row.submission_time }}<a href="{{  url_for("edit_comment", comment_id=row.id) }}" style="margin: 20px">Edit comment</a>
+                            <a href="{{ url_for("delete_comment", comment_id=row.id) }}">Delete comment</a></p>
+
+                        <p>Edited: {{ row.edited_count }}</p>
+                    {% endif %}
+                {% endfor %} <br>
+
+
+
+                <p  style= "margin:10px" >{{ data.vote_number }} points <a href="{{  url_for("vote_a_up", answer_id=data.id, question_id=data.question_id) }}" style= "margin:10px" >Up</a><a href="{{  url_for("vote_a_down", answer_id=data.id, question_id=data.question_id) }}">Down</a></p><br>
 
 
             <form action="/list/add-answer-image/{{ id }}/{{ data.id }}" method="POST" enctype="multipart/form-data">
@@ -68,35 +101,30 @@
                 <label for="image">Select image:</label><br><br>
                 <input type="file"  name="image" id="image">
                 <button href="{{ url_for("upload_answer_image", question_id=id, answer_id=data.id) }}" type="submit" >Upload image</button>
-
-
-
             </form>
+                <hr>
             {% endfor %}
+
     </div><br><br><br>
 
 
 
-    <div id="anchors">
-        <a href="{{ url_for("new_answer", question_id=id) }}" style= "margin:10px" >Add answer</a>
-        <a href="{{ url_for("edit_question", question_id=id) }}" style= "margin:10px" >Edit question</a>
-        <a href="{{ url_for("delete_question", question_id=id) }}" style= "margin:10px" >Delete question</a>
-        <a href="{{ url_for("add_q_comment", question_id=id) }}" style= "margin:10px" >Add comment</a>
-        <br><br><br>
-        <a href="{{ url_for("list")}}">List questions</a><br><br>
-    </div>
 
 
-    <div>
 
-        <label><strong>Comments:</strong></label><br><br>
+    <div id="comments">
+
+        <label><strong>Question comments:</strong></label><br><br>
         {% for row in comment_q_data %}
             <p>Message: {{ row["message"] }}</p>
-            <p>Submission time: {{ row["submission_time"] }}<a href="{{  url_for("edit_comment", comment_id=row.id) }}">Edit comment</a></p>
+            <p>Submission time: {{ row["submission_time"] }}<a href="{{  url_for("edit_comment", comment_id=row.id) }}" style="margin: 20px">Edit comment</a></p>
             <p>Edited: {{ row.edited_count }}</p><br><br>
         {% endfor %}
 
-    </div>
+    </div><br><br>
+
+
+
 
 </body>
 </html>

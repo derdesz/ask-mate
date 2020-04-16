@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Search result</title>
+
+    <style>
+
+        table, th td {border: 1px solid black;
+            align-content: center ;
+            padding: 15px;
+        }
+        tr {text-align: center}
+        body {background-color: gainsboro;
+            padding-top: 30px;
+        }
+        #message {padding: 50px}
+        #questions {width: 100%}
+        #answers {margin-top: 50px;
+        }
+        .mark {font-style: italic}
+        .answers {width: 100%;}
+        .questions {width: 100%;}
+
+    </style>
+</head>
+<body>
+
+<div id="answers">
+    <table id="questions">
+        <h4>Questions:</h4>
+        {% for elem in ["id","title","message"] %}
+        <th>{{ elem.upper() }}</th>
+        {% endfor %}
+        {% for row in search_result_q %}
+            <tr>
+                <td id="first_col">{{ row.id }}</td>
+                <td>
+                    {% for part in row.title.split() %}
+                        {% if search_phrase.lower() in part.lower() %}
+                            <mark class="mark">{{ part }}</mark>
+                        {% else %}
+                            {{ part }}
+                        {% endif %}
+                    {% endfor %}
+                </td>
+                <td id="message">
+                    {% for part in row.message.split() %}
+                        {% if search_phrase.lower() in part.lower() %}
+                            <mark class="mark">{{ part }}</mark>
+                        {% else %}
+                            {{ part }}
+                        {% endif %}
+                    {% endfor %}
+
+                </td>
+            </tr>
+        {% endfor %}
+    </table>
+</div>
+
+<div id="answers">
+    <table class="answers">
+        <h4>Answers:</h4>
+        {% for elem in ["id","message", "question ID"] %}
+        <th>{{ elem.upper() }}</th>
+        {% endfor %}
+        {% for row in search_result_a %}
+            <tr>
+                <td id="first_col">{{ row.id }}</td>
+                <td>
+                    {% for part in row.message.split() %}
+                        {% if search_phrase.lower() in part.lower() %}
+                            <mark>{{ part }}</mark>
+                        {% else %}
+                            {{ part }}
+                        {% endif %}
+                    {% endfor %}
+                </td>
+                <td>{{ row.question_id }}</td>
+            </tr>
+        {% endfor %}
+    </table>
+</div>
+
+
+
+</body>
+</html>
