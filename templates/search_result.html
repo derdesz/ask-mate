@@ -5,6 +5,7 @@
     <title>Search result</title>
 
     <style>
+<<<<<<< HEAD
 
         table, th td {border: 1px solid black;
             align-content: center ;
@@ -22,10 +23,15 @@
         .answers {width: 100%;}
         .questions {width: 100%;}
 
+=======
+        table, th td {border: 1px solid black}
+        tr {text-align: center}
+>>>>>>> 94bdbed18c2f1f3470ca4b30c3a85253d356ddd5
     </style>
 </head>
 <body>
 
+<<<<<<< HEAD
 <div id="answers">
     <table id="questions">
         <h4>Questions:</h4>
@@ -82,6 +88,62 @@
         {% endfor %}
     </table>
 </div>
+=======
+
+<table>
+    <h4>Questions:</h4>
+    {% for elem in ["id","title","message"] %}
+    <th>{{ elem }}</th>
+    {% endfor %}
+    {% for row in search_result_q %}
+        <tr>
+            <td id="first_col">{{ row.id }}</td>
+            <td>
+                {% for part in row.title.split() %}
+                    {% if search_phrase.lower() in part.lower() %}
+                        <mark>{{ part }}</mark>
+                    {% else %}
+                        {{ part }}
+                    {% endif %}
+                {% endfor %}
+            </td>
+            <td>
+                {% for part in row.message.split() %}
+                    {% if search_phrase.lower() in part.lower() %}
+                        <mark>{{ part }}</mark>
+                    {% else %}
+                        {{ part }}
+                    {% endif %}
+                {% endfor %}
+
+            </td>
+        </tr>
+    {% endfor %}
+</table>
+<table>
+    <h4>Answers:</h4>
+    {% for elem in ["id","message", "question ID"] %}
+    <th>{{ elem }}</th>
+    {% endfor %}
+    {% for row in search_result_a %}
+        <tr>
+            <td id="first_col">{{ row.id }}</td>
+            <td>
+                {% for part in row.message.split() %}
+                    {% if search_phrase.lower() in part.lower() %}
+                        <mark>{{ part }}</mark>
+                    {% else %}
+                        {{ part }}
+                    {% endif %}
+                {% endfor %}
+            </td>
+            <td>{{ row.question_id }}</td>
+        </tr>
+    {% endfor %}
+</table>
+
+
+>>>>>>> 94bdbed18c2f1f3470ca4b30c3a85253d356ddd5
 
 
 

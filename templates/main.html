@@ -29,6 +29,7 @@
 
     <form method="post" action="#" name="search">
     <label for="search"></label><br>
+<<<<<<< HEAD
     <textarea id="search" name="search"></textarea>
     <button type="submit">Search</button><br><br>
     </form>
@@ -37,15 +38,28 @@
 
 
 </div><br><br>
+=======
+    <input type="text" id="search" name="search" value="Search for something">
+    <button type="submit">Search</button><br><br>
+    </form>
+
+</div>
+>>>>>>> 94bdbed18c2f1f3470ca4b30c3a85253d356ddd5
 
 
 
 
 
 <div class="list_last_5_questions">
+<<<<<<< HEAD
     <h2>Recent questions: </h2>
     {% for question in last_5_questions %}
         <p class="questions">{{ question.message }} <span style="background-color: khaki"> {{ question.submission_time }}</span></p><br><br>
+=======
+
+    {% for question in last_5_questions %}
+        <p style="width: 600px">{{ question.message }} {{ question.submission_time }}</p><br><br>
+>>>>>>> 94bdbed18c2f1f3470ca4b30c3a85253d356ddd5
     {% endfor %}
 </div>
 
