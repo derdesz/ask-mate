@@ -200,3 +200,4 @@ def get_last_5_questions(cursor: RealDictCursor) -> list:
     cursor.execute("select message, submission_time from question order by submission_time DESC limit 6")
     return cursor.fetchall()
 
+#question.message, question.title, answer.message, question.id, answer.id

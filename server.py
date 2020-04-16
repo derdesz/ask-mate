@@ -14,10 +14,8 @@ from werkzeug.utils import secure_filename
 
 app = Flask(__name__, static_folder='static')
 
-app.config["IMAGE_UPLOADS"] = "/home/getulus/my_project/web/1st/ask-mate-remotemates/static"
+app.config["IMAGE_UPLOADS"] = "/home/derdesz/Desktop/projects/ask-mate-remotemates/static"
 app.config["ALLOWED_IMAGE_EXTENSIONS"] = ["PNG", "JPG"]
-
-
 
 
 def allowed_image(filename):
@@ -54,11 +52,11 @@ def search_question(search_phrase):
     return render_template("search_result.html", search_result_q=search_result_q, search_result_a=search_result_a, search_phrase=search_phrase)
 
 
-@app.route('/list/', methods=["POST","GET"])
-@app.route('/list', methods=["POST","GET"])
+@app.route('/list/', methods=["POST", "GET"])
+@app.route('/list', methods=["POST", "GET"])
 def list():
     if request.method == "POST":
-        header =request.form["title"]
+        header = request.form["title"]
         if request.form["way"] == "Ascending":
             way = "ASC"
         else:
@@ -73,7 +71,6 @@ def list():
 
 @app.route("/list/question/<string:question_id>")
 def display_question(question_id):
-
     current_q_data = database_manager.get_current_question(question_id)
     all_a_data = database_manager.get_all_answer(question_id)
 
@@ -94,8 +91,7 @@ def ask_question():
     q_id = data_manager.create_id()
     if request.method == "POST":
         if request.form:
-            database_manager.add_question(q_id, time_stample, request.form["title"], request.form["message"] )
-
+            database_manager.add_question(q_id, time_stample, request.form["title"], request.form["message"])
 
         if request.files:
             return redirect(url_for("ask_question"))
@@ -112,7 +108,7 @@ def ask_question():
             else:
                 filename = secure_filename(image.filename)
                 database_manager.add_image(filename, )
-                
+
                 image.save(os.path.join(app.config["IMAGE_UPLOADS"], filename))
         '''
 
@@ -120,8 +116,6 @@ def ask_question():
 
     else:
         return render_template("add_question.html")
-
-
 
 
 @app.route("/list/question/<string:question_id>/comment", methods=["POST", "GET"])
@@ -136,9 +130,7 @@ def add_q_comment(question_id):
         return render_template("add_comment.html", question_id=question_id)
 
 
-
-
-@app.route("/list/add-answer-image/<string:question_id>/<string:answer_id>", methods=["GET","POST"])
+@app.route("/list/add-answer-image/<string:question_id>/<string:answer_id>", methods=["GET", "POST"])
 def upload_answer_image(question_id, answer_id):
     time_stample = time.time()
     time_stample = datetime.fromtimestamp(time_stample)
@@ -157,20 +149,18 @@ def upload_answer_image(question_id, answer_id):
         return redirect(url_for("display_question", question_id=question_id))
 
 
-
 @app.route("/question/<question_id>/new-answer", methods=["POST", "GET"])
 def new_answer(question_id):
     if request.method == "POST":
         time_stample = time.time()
         time_stample = datetime.fromtimestamp(time_stample)
         a_id = data_manager.create_id()
-        database_manager.add_answer(question_id,a_id,time_stample,request.form["message"])
+        database_manager.add_answer(question_id, a_id, time_stample, request.form["message"])
 
         return redirect(url_for("display_question", question_id=question_id))
 
     else:
         return render_template("new_answer.html")
-
 
 
 @app.route("/question/<question_id>/answer/<answer_id>/edit", methods=["POST", "GET"])
@@ -181,9 +171,6 @@ def edit_answer(answer_id, question_id):
     else:
         current_answer_data = database_manager.get_current_answer(answer_id)
         return render_template("edit_answer.html", current_answer_data=current_answer_data)
-
-
-
 
 
 @app.route("/question/<question_id>/answer/<answer_id>/new-comment", methods=["POST", "GET"])
@@ -212,17 +199,14 @@ def edit_comment(comment_id):
         else:
             question_id = database_manager.get_current_comment(comment_id)[0]["question_id"]
 
-
         return redirect(url_for("display_question", question_id=question_id))
     else:
         current_comment = database_manager.get_current_comment(comment_id)
         return render_template("edit_comment.html", current_comment=current_comment, comment_id=comment_id)
 
 
-
-@app.route("/question/<question_id>/edit", methods=["POST","GET"])
+@app.route("/question/<question_id>/edit", methods=["POST", "GET"])
 def edit_question(question_id):
-
     if request.method == "POST":
         time_stample = time.time()
         time_stample = datetime.fromtimestamp(time_stample)
@@ -249,18 +233,14 @@ def edit_question(question_id):
         return render_template("edit_question.html", current_data=current_data, question_id=question_id)
 
 
-
-
 @app.route("/question/<question_id>/delete")
 def delete_question(question_id):
     database_manager.delete_question(question_id)
     return redirect(url_for("list"))
 
-        
 
 @app.route("/<question_id>/<answer_id>/delete")
 def delete_answer(answer_id, question_id):
-
     database_manager.delete_answer(answer_id)
     return redirect(url_for("display_question", question_id=question_id))
 
@@ -276,6 +256,7 @@ def vote_down(question_id):
     database_manager.vote_question_down(question_id)
     return redirect(url_for("list"))
 
+
 @app.route("/<question_id>/answer/<answer_id>/vote_up")
 def vote_a_up(answer_id, question_id):
     database_manager.vote_answer_up(answer_id)
@@ -286,6 +267,7 @@ def vote_a_up(answer_id, question_id):
 def vote_a_down(answer_id, question_id):
     database_manager.vote_answer_down(answer_id)
     return redirect(url_for("display_question", question_id=question_id))
+
 
 @app.route("/list/sort")
 def sort():
@@ -338,7 +320,6 @@ def add_tag(question_id):
     else:
         all_tags = database_manager.get_all_tags()
         return render_template("tags.html", tags=all_tags)
-
 
 
 @app.route("/question/<question_id>/tag/<tag_id>/delete")

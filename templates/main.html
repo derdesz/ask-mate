@@ -3,6 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <title>Main</title>
+    <style>
+        body {background-color: gainsboro}
+        h1 {font-family: Dyuthi, sans-serif;
+            color: darkcyan;
+        }
+        h2 {font-family: Dyuthi, sans-serif;
+            color: darkcyan;
+        }
+        .questions {background-color: azure;
+                font-family: DejaVu Sans, sans-serif;
+                width: 700px;
+        }
+
+    </style>
 </head>
 <body>
 <br>
@@ -26,9 +40,9 @@
 
 
 <div class="list_last_5_questions">
-
+    <h2>Recent questions: </h2>
     {% for question in last_5_questions %}
-        <p style="width: 600px">{{ question.message }} {{ question.submission_time }}</p><br><br>
+        <p class="questions">{{ question.message }} <span style="background-color: khaki"> {{ question.submission_time }}</span></p><br><br>
     {% endfor %}
 </div>
 
