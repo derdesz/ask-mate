@@ -50,9 +50,16 @@ ANSWERS
 def add_answer(cursor: RealDictCursor, q_id, a_id, submission_time, message) -> list:
     cursor.execute("insert into answer values('%s', '%s', 0, '%s', '%s') " % (a_id, submission_time, q_id, message))
 
+
 @database.connection_handler
-def get_current_answer(cursor: RealDictCursor, q_id) -> list:
+def get_all_answer(cursor: RealDictCursor, q_id) -> list:
     cursor.execute("select * from answer where question_id = '%s' " % q_id)
+    return cursor.fetchall()
+
+
+@database.connection_handler
+def get_current_answer(cursor: RealDictCursor, a_id) -> list:
+    cursor.execute("select * from answer where id = '%s' " % a_id)
     return cursor.fetchall()
 
 @database.connection_handler
@@ -173,3 +180,24 @@ def get_tag_for_question(cursor: RealDictCursor, q_id) -> list:
 def delete_question_tag(cursor: RealDictCursor, q_id, tag_id) -> list:
     cursor.execute("DELETE FROM question_tag WHERE tag_id = '%s' and question_id = '%s'" % (tag_id, q_id))
 
+"""
+SEARCH
+"""
+
+@database.connection_handler
+def searched_phrase_q(cursor: RealDictCursor, search_phrase) -> list:
+    cursor.execute("SELECT * FROM question WHERE message LIKE '%{}%' or title LIKE '%{}%' ".format(search_phrase, search_phrase))
+    return cursor.fetchall()
+
+@database.connection_handler
+def searched_phrase_a(cursor: RealDictCursor, search_phrase) -> list:
+    cursor.execute("SELECT * FROM answer WHERE message LIKE '%{}%' ".format(search_phrase))
+    return cursor.fetchall()
+
+
+@database.connection_handler
+def get_last_5_questions(cursor: RealDictCursor) -> list:
+    cursor.execute("select message, submission_time from question order by submission_time DESC limit 6")
+    return cursor.fetchall()
+
+#question.message, question.title, answer.message, question.id, answer.id

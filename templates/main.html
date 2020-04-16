@@ -5,9 +5,33 @@
     <title>Main</title>
 </head>
 <body>
-<h1>Üdvözöllek az oldalon</h1>
+<br>
+<h1>Welcome to AskMate</h1><br><br>
 
-<a href="/list">Questions</a>
+<a href="/list">GO TO ALL QUESTIONS</a><br><br>
+
+
+<div class="search">
+
+    <form method="post" action="#" name="search">
+    <label for="search"></label><br>
+    <input type="text" id="search" name="search" value="Search for something">
+    <button type="submit">Search</button><br><br>
+    </form>
+
+</div>
+
+
+
+
+
+<div class="list_last_5_questions">
+
+    {% for question in last_5_questions %}
+        <p style="width: 600px">{{ question.message }} {{ question.submission_time }}</p><br><br>
+    {% endfor %}
+</div>
+
 
 </body>
 </html>

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Search result</title>
+</head>
+<body>
+
+
+<table>
+    <h4>Questions:</h4>
+    {% for elem in ["id","title","message"] %}
+    <th>{{ elem }}</th>
+    {% endfor %}
+    {% for row in search_result_q %}
+        <tr>
+            <td id="first_col">{{ row.id }}</td>
+            <td>{{ row.title }}</td>
+            <td>{{ row.message }}</td>
+        </tr>
+    {% endfor %}
+</table>
+<table>
+    <h4>Answers:</h4>
+    {% for elem in ["id","title","message"] %}
+    <th>{{ elem }}</th>
+    {% endfor %}
+    {% for row in search_result_a %}
+        <tr>
+            <td id="first_col">{{ row.id }}</td>
+            <td>{{ row.message }}</td>
+            <td>{{ row.question_id }}</td>
+        </tr>
+    {% endfor %}
+</table>
+
+
+
+
+
+</body>
+</html>

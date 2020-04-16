@@ -46,7 +46,7 @@
 
     <div id="answers">
             <h5>Answer:</h5>
-            {% for data in current_a_data %}
+            {% for data in all_a_data %}
                 <p class="big_text">{{ data.message }}</p>
                 {% if data.image %}
                 <img src="{{ url_for('static', filename=data.image)}}" id="a_picture">

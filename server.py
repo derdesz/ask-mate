@@ -37,11 +37,22 @@ def test_site():
 
 
 
-
-@app.route("/")
+@app.route("/", methods=["POST", "GET"])
 def hello():
+    if request.method == "POST":
+        searched_word = request.form["search"]
+        return redirect(url_for("search_question", search_phrase=searched_word))
+    else:
+        last_5_questions = database_manager.get_last_5_questions()
+        return render_template("main.html", last_5_questions=last_5_questions)
 
-    return render_template("main.html")
+
+@app.route("/search?q=<search_phrase>")
+def search_question(search_phrase):
+    search_result_q = database_manager.searched_phrase_q(search_phrase)
+    search_result_a = database_manager.searched_phrase_a(search_phrase)
+    return render_template("search_result.html", search_result_q=search_result_q, search_result_a=search_result_a)
+
 
 @app.route('/list/', methods=["POST","GET"])
 @app.route('/list', methods=["POST","GET"])
@@ -64,7 +75,7 @@ def list():
 def display_question(question_id):
 
     current_q_data = database_manager.get_current_question(question_id)
-    current_a_data = database_manager.get_current_answer(question_id)
+    all_a_data = database_manager.get_all_answer(question_id)
 
     comment_a_data = database_manager.get_all_comment()
     comment_q_data = database_manager.get_comment("question_id", question_id)
@@ -72,7 +83,7 @@ def display_question(question_id):
     all_tags = database_manager.get_tag_for_question(question_id)
 
     return render_template("display_question.html", comment_a_data=comment_a_data,
-                           comment_q_data=comment_q_data, id=question_id, current_a_data=current_a_data,
+                           comment_q_data=comment_q_data, id=question_id, all_a_data=all_a_data,
                            current_q_data=current_q_data, all_tags=all_tags)
 
 
@@ -168,7 +179,7 @@ def edit_answer(answer_id, question_id):
         database_manager.edit_answer(answer_id, request.form["message"])
         return redirect(url_for("display_question", question_id=question_id))
     else:
-        current_answer_data = database_manager.get_current_answer(question_id)
+        current_answer_data = database_manager.get_current_answer(answer_id)
         return render_template("edit_answer.html", current_answer_data=current_answer_data)
 
 
@@ -334,8 +345,6 @@ def add_tag(question_id):
 def delete_tag(question_id, tag_id):
     database_manager.delete_question_tag(question_id, tag_id)
     return redirect(url_for("display_question", question_id=question_id))
-
-
 
 
 if __name__ == "__main__":
