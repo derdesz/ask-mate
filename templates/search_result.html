@@ -34,7 +34,7 @@
         {% endfor %}
         {% for row in search_result_q %}
             <tr>
-                <td id="first_col">{{ row.id }}</td>
+                <td id="first_col"><a href="{{ url_for("display_question", question_id=row.id) }}">{{ row.id }}</a></td>
                 <td>
                     {% for part in row.title.split() %}
                         {% if search_phrase.lower() in part.lower() %}
@@ -77,12 +77,13 @@
                         {% endif %}
                     {% endfor %}
                 </td>
-                <td>{{ row.question_id }}</td>
+                <td><a href="{{ url_for("display_question", question_id=row.question_id) }}">{{ row.question_id }}</a></td>
             </tr>
         {% endfor %}
     </table>
-</div>
+</div><br><br>
 
+<a  href="{{ url_for("list") }}" style="margin: 20px">List all questions</a><a  href="{{ url_for("hello") }}" style="margin: 20px">Back to the main page</a>
 
 
 </body>

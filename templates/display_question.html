@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Display question</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <style>
 
         #question {width: 60%;}
@@ -19,8 +20,12 @@
         .small-headline { text-decoration: underline}
         #anchors {padding-top: 10px}
 
-
     </style>
+    <script>
+        function myFunction() {
+        confirm("Press 'ok' if you want to delete");}
+    </script>
+
 </head>
 <body>
     <div id='question_image'>
@@ -85,7 +90,7 @@
                 {% for row in comment_a_data %}
                     {% if row.answer_id == data.id %}
                         <p>Message: {{ row.message }} Submission_time:{{ row.submission_time }}<a href="{{  url_for("edit_comment", comment_id=row.id) }}" style="margin: 20px">Edit comment</a>
-                            <a href="{{ url_for("delete_comment", comment_id=row.id) }}">Delete comment</a></p>
+                            <a href="{{ url_for("delete_comment", comment_id=row.id) }}"><i class="fa fa-trash-o" style="font-size:24px;color:red" onclick="myFunction()"></i></a></p>
 
                         <p>Edited: {{ row.edited_count }}</p>
                     {% endif %}
@@ -111,12 +116,13 @@
 
 
 
+
     <div id="comments">
 
         <label><strong>Question comments:</strong></label><br><br>
         {% for row in comment_q_data %}
             <p>Message: {{ row["message"] }}</p>
-            <p>Submission time: {{ row["submission_time"] }}<a href="{{  url_for("edit_comment", comment_id=row.id) }}" style="margin: 20px">Edit comment</a></p>
+            <p>Submission time: {{ row["submission_time"] }}<a href="{{  url_for("edit_comment", comment_id=row.id) }}" style="margin: 20px">Edit comment</a><a href="{{ url_for("delete_comment", comment_id=row.id) }}"><i class="fa fa-trash-o" style="font-size:24px;color:red", onclick="myFunction()"></i></a></p>
             <p>Edited: {{ row.edited_count }}</p><br><br>
         {% endfor %}
 

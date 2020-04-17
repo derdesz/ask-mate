@@ -24,8 +24,8 @@ def add_question(cursor: RealDictCursor, q_id, submission_time, title, message) 
     cursor.execute("insert into question values('%s', '%s', 0, 0, '%s', '%s') " % (q_id, submission_time, title, message))
 
 @database.connection_handler
-def edit_question(cursor: RealDictCursor, header, q_id, message) -> list:
-    cursor.execute("update question set title = '%s', message = '%s' where id = '%s' " % (header, message, q_id))
+def edit_question(cursor: RealDictCursor, time, header, q_id, message) -> list:
+    cursor.execute("update question set title = '%s', message = '%s', submission_time = '%s' where id = '%s' " % (header, message, time, q_id))
 
 @database.connection_handler
 def sort_questions(cursor: RealDictCursor, header, way) -> list:
@@ -197,7 +197,7 @@ def searched_phrase_a(cursor: RealDictCursor, search_phrase) -> list:
 
 @database.connection_handler
 def get_last_5_questions(cursor: RealDictCursor) -> list:
-    cursor.execute("select message, submission_time from question order by submission_time DESC limit 6")
+    cursor.execute("select message, submission_time from question order by submission_time DESC limit 5")
     return cursor.fetchall()
 
 #question.message, question.title, answer.message, question.id, answer.id

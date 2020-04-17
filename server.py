@@ -14,7 +14,7 @@ from werkzeug.utils import secure_filename
 
 app = Flask(__name__, static_folder='static')
 
-app.config["IMAGE_UPLOADS"] = "/home/derdesz/Desktop/projects/ask-mate-remotemates/static"
+app.config["IMAGE_UPLOADS"] = "/home/getulus/my_project/web/1st/ask-mate-remotemates/static"
 app.config["ALLOWED_IMAGE_EXTENSIONS"] = ["PNG", "JPG"]
 
 
@@ -211,7 +211,7 @@ def edit_question(question_id):
         time_stample = time.time()
         time_stample = datetime.fromtimestamp(time_stample)
         if request.form:
-            database_manager.edit_question(request.form["title"], question_id, request.form["message"])
+            database_manager.edit_question(time_stample, request.form["title"], question_id, request.form["message"])
 
         if request.files:
             image = request.files["image"]
