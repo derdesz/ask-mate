@@ -28,6 +28,7 @@
 
 </head>
 <body>
+    <a href="{{ url_for("list")}}"><--- List questions</a><br><br>
     <div id='question_image'>
         {% for data in current_q_data %}
             {% if data.image %}
@@ -69,7 +70,6 @@
         <a href="{{ url_for("edit_question", question_id=id) }}" style= "margin:10px" >Edit question</a>
         <a href="{{ url_for("delete_question", question_id=id) }}" style= "margin:10px" >Delete question</a>
         <a href="{{ url_for("add_q_comment", question_id=id) }}" style= "margin:10px" >Add comment</a>
-        <a href="{{ url_for("list")}}" style="margin: 500px">List questions</a><br><br>
     </div>
 
     <div id="answers">
@@ -122,7 +122,8 @@
         <label><strong>Question comments:</strong></label><br><br>
         {% for row in comment_q_data %}
             <p>Message: {{ row["message"] }}</p>
-            <p>Submission time: {{ row["submission_time"] }}<a href="{{  url_for("edit_comment", comment_id=row.id) }}" style="margin: 20px">Edit comment</a><a href="{{ url_for("delete_comment", comment_id=row.id) }}"><i class="fa fa-trash-o" style="font-size:24px;color:red", onclick="myFunction()"></i></a></p>
+            <p>Submission time: {{ row["submission_time"] }}</p>
+            <a href="{{  url_for("edit_comment", comment_id=row.id) }}">Edit comment</a><a href="{{ url_for("delete_comment", comment_id=row.id) }}" style="margin: 20px"><i class="fa fa-trash-o" style="font-size:24px;color:red", onclick="myFunction()"></i></a>
             <p>Edited: {{ row.edited_count }}</p><br><br>
         {% endfor %}
 
