@@ -76,6 +76,12 @@
             <h3 class="small-headline">Answers:</h3>
             {% for data in all_a_data %}
                 <h4>Answer: {{ data.id }}</h4>
+                {% if data.accepted == 'yes' %}
+                    <p style="color: forestgreen">Accepted!</p>
+                    <form action="#"  method="post"><button name="cancel" value="{{ data.id }}" type="submit">Cancel</button></form>
+                {% else %}
+                    <form action="#"  method="post"><button name="accept" value="{{ data.id }}" type="submit">Accept</button></form>
+                {% endif %}
                 <p class="big_text">{{ data.message }}</p>
                 {% if data.image %}
                 <img src="{{ url_for('static', filename=data.image)}}" id="a_picture">
