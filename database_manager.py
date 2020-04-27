@@ -244,11 +244,11 @@ def get_hash_password(cursor: RealDictCursor, username) -> list:
 
 @database.connection_handler
 def get_all_users(cursor: RealDictCursor) -> list:
-    cursor.execute("select user_datas.user_id, user_datas.username, "
+    cursor.execute("select user_datas.user_id, user_datas.username, user_datas.reputation,"
                    "user_datas.date_of_registration, count(user_binds.binded_questions) AS QUESTION_COUNT, "
                    "count(user_binds.binded_answers) AS ANSWER_COUNT, count(user_binds.binded_comments) AS COMMENT_COUNT "
                    "FROM user_datas FULL JOIN user_binds ON user_datas.user_id=user_binds.user_id "
-                   "GROUP BY user_datas.user_id, user_datas.username, user_datas.date_of_registration")
+                   "GROUP BY user_datas.user_id, user_datas.username, user_datas.date_of_registration, user_datas.reputation")
     all_datas = cursor.fetchall()
     list_of_all_user_data = [row for row in all_datas]
     return list_of_all_user_data
