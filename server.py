@@ -6,7 +6,6 @@ from datetime import datetime
 import database_manager
 
 
-
 app = Flask(__name__, static_folder='static')
 
 import os
@@ -31,7 +30,7 @@ def allowed_image(filename):
 @app.route("/test")
 def test_site():
     datas = database_manager.get_current_answer("1")
-
+    print('hello')
     t = "awrkgjebrhgegéb"
     return render_template("test.html", datas=datas)
 
