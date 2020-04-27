@@ -191,6 +191,16 @@ def get_tag_for_question(cursor: RealDictCursor, q_id) -> list:
 def delete_question_tag(cursor: RealDictCursor, q_id, tag_id) -> list:
     cursor.execute("DELETE FROM question_tag WHERE tag_id = '%s' and question_id = '%s'" % (tag_id, q_id))
 
+
+@database.connection_handler
+def get_tag_with_question_count(cursor: RealDictCursor) -> list:
+    cursor.execute("SELECT tag.name AS tag, COUNT(question_tag.tag_id) AS count "
+                   "FROM tag INNER JOIN question_tag ON tag.id = question_tag.tag_id "
+                   "GROUP BY tag.name, question_tag.tag_id")
+    return cursor.fetchall()
+
+
+
 """
 SEARCH
 """

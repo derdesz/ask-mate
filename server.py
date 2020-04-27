@@ -402,6 +402,11 @@ def delete_tag(question_id, tag_id):
     database_manager.delete_question_tag(question_id, tag_id)
     return redirect(url_for("display_question", question_id=question_id))
 
+@app.route("/tags")
+def tags():
+    tags = database_manager.get_tag_with_question_count()
+    return render_template('list_tags.html', tags=tags)
+
 
 if __name__ == "__main__":
     app.run(debug=True)

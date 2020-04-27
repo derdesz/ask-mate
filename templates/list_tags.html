@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>List tags</title>
+</head>
+<body>
+
+
+<table>
+    {% for header in ["TAG", "COUNT"] %}
+        {{ header }}
+    {% endfor %}
+</table>
+
+<table>
+    {% for row in tags %}
+        <tr>
+
+            <td>{{ row.tag }}</td>
+            <td>{{ row.count }}</td>
+
+        </tr>
+    {% endfor %}
+
+
+
+</table>
+
+
+
+</body>
+</html>
