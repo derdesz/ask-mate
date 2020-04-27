@@ -223,8 +223,8 @@ def get_max_user_id(cursor: RealDictCursor) -> list:
 
 
 @database.connection_handler
-def add_user(cursor: RealDictCursor, id, name, password, date) -> list:
-    cursor.execute("INSERT INTO user_datas VALUES ('%s', '%s', '%s', '%s')" % (id, name, password, date))
+def add_user(cursor: RealDictCursor, id, name, password, date, repu) -> list:
+    cursor.execute("INSERT INTO user_datas VALUES ('%s', '%s', '%s', '%s', '%s')" % (id, name, password, date, repu))
 
 
 @database.connection_handler
@@ -268,3 +268,22 @@ def get_userID_by_questionID(cursor: RealDictCursor, q_id) -> list:
     cursor.execute("select user_id from user_binds where binded_questions = %s " % q_id)
     id = [row['user_id'] for row in cursor.fetchall()]
     return id[0]
+
+
+@database.connection_handler
+def get_userID_by_answerID(cursor: RealDictCursor, a_id) -> list:
+    cursor.execute("select user_id from user_binds where binded_answers = %s " % a_id)
+    id = [row['user_id'] for row in cursor.fetchall()]
+    return id[0]
+
+
+"""
+Reputation
+"""
+
+
+@database.connection_handler
+def gain_reputation(cursor: RealDictCursor, points, user_id) -> list:
+    cursor.execute("update user_datas set reputation = reputation + '%s' where user_id = '%s' " % (points, user_id))
+
+
