@@ -296,9 +296,9 @@ def get_userID_by_questionID(cursor: RealDictCursor, q_id) -> list:
 def get_user_data_by_username(cursor: RealDictCursor, user_id) -> list:
     cursor.execute("SELECT user_datas.user_id, user_datas.username, user_datas.date_of_registration,"
                    "COUNT(user_binds.binded_questions) AS binded_questions, COUNT(user_binds.binded_answers) AS binded_answers,"
-                   "COUNT(user_binds.binded_comments) AS binded_comments FROM user_datas FULL JOIN user_binds"
+                   "COUNT(user_binds.binded_comments) AS binded_comments, user_datas.reputation FROM user_datas FULL JOIN user_binds"
                    " ON user_datas.user_id=user_binds.user_id "
-                   "WHERE user_datas.user_id = '%s' GROUP BY user_datas.user_id, user_datas.username, user_datas.date_of_registration" % user_id)
+                   "WHERE user_datas.user_id = '%s' GROUP BY user_datas.user_id, user_datas.username, user_datas.date_of_registration, user_datas.reputation" % user_id)
     user_datas = cursor.fetchall()
     return user_datas
 
@@ -323,7 +323,11 @@ def get_all_comments_by_user(cursor: RealDictCursor, user_id) -> list:
     comments = cursor.fetchall()
     return comments
 
-
+@database.connection_handler
+def get_reputation_by_user(cursor: RealDictCursor, user_id) -> list:
+    cursor.execute("SELECT reputation FROM user_datas WHERE user_id = '%s' " % user_id)
+    comments = cursor.fetchall()
+    return comments
 
 
 @database.connection_handler
