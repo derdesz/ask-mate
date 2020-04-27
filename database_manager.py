@@ -223,8 +223,8 @@ def get_max_user_id(cursor: RealDictCursor) -> list:
 
 
 @database.connection_handler
-def add_user(cursor: RealDictCursor, id, name, password, date) -> list:
-    cursor.execute("INSERT INTO user_datas VALUES ('%s', '%s', '%s', '%s')" % (id, name, password, date))
+def add_user(cursor: RealDictCursor, id, name, password, date, repu) -> list:
+    cursor.execute("INSERT INTO user_datas VALUES ('%s', '%s', '%s', '%s', '%s')" % (id, name, password, date, repu))
 
 
 @database.connection_handler
@@ -244,11 +244,11 @@ def get_hash_password(cursor: RealDictCursor, username) -> list:
 
 @database.connection_handler
 def get_all_users(cursor: RealDictCursor) -> list:
-    cursor.execute("select user_datas.user_id, user_datas.username, "
+    cursor.execute("select user_datas.user_id, user_datas.username, user_datas.reputation,"
                    "user_datas.date_of_registration, count(user_binds.binded_questions) AS QUESTION_COUNT, "
                    "count(user_binds.binded_answers) AS ANSWER_COUNT, count(user_binds.binded_comments) AS COMMENT_COUNT "
                    "FROM user_datas FULL JOIN user_binds ON user_datas.user_id=user_binds.user_id "
-                   "GROUP BY user_datas.user_id, user_datas.username, user_datas.date_of_registration")
+                   "GROUP BY user_datas.user_id, user_datas.username, user_datas.date_of_registration, user_datas.reputation")
     all_datas = cursor.fetchall()
     list_of_all_user_data = [row for row in all_datas]
     return list_of_all_user_data
@@ -312,4 +312,24 @@ def get_all_comments_by_user(cursor: RealDictCursor, user_id) -> list:
                    "ON comment.id=user_binds.binded_comments WHERE user_id = '%s' " % user_id)
     comments = cursor.fetchall()
     return comments
+
+
+
+
+@database.connection_handler
+def get_userID_by_answerID(cursor: RealDictCursor, a_id) -> list:
+    cursor.execute("select user_id from user_binds where binded_answers = %s " % a_id)
+    id = [row['user_id'] for row in cursor.fetchall()]
+    return id[0]
+
+
+"""
+Reputation
+"""
+
+
+@database.connection_handler
+def gain_reputation(cursor: RealDictCursor, points, user_id) -> list:
+    cursor.execute("update user_datas set reputation = reputation + '%s' where user_id = '%s' " % (points, user_id))
+
 

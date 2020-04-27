@@ -58,7 +58,7 @@ def registration():
         password = password_hash.hash_password(request.form['password'])
         time_stample = time.time()
         registration_date = datetime.fromtimestamp(time_stample)
-        database_manager.add_user(user_id, username, password, registration_date)
+        database_manager.add_user(user_id, username, password, registration_date, 0)
 
         return redirect(url_for('hello'))
     else:
@@ -135,6 +135,8 @@ def display_question(question_id):
             if 'accept' in request.form:
                 answer_id = request.form['accept']
                 database_manager.accept_answer(answer_id)
+                user_id = database_manager.get_userID_by_answerID(answer_id)
+                database_manager.gain_reputation(15, user_id)
             else:
                 answer_id = request.form['cancel']
                 database_manager.cancel_answer(answer_id)
@@ -313,24 +315,32 @@ def delete_answer(answer_id, question_id):
 @app.route("/question/<question_id>/vote_up")
 def vote_up(question_id):
     database_manager.vote_question_up(question_id)
+    user_id = database_manager.get_userID_by_questionID(question_id)
+    database_manager.gain_reputation(5, user_id)
     return redirect(url_for("list"))
 
 
 @app.route("/question/<question_id>/vote_down")
 def vote_down(question_id):
     database_manager.vote_question_down(question_id)
+    user_id = database_manager.get_userID_by_questionID(question_id)
+    database_manager.gain_reputation(-2, user_id)
     return redirect(url_for("list"))
 
 
 @app.route("/<question_id>/answer/<answer_id>/vote_up")
 def vote_a_up(answer_id, question_id):
     database_manager.vote_answer_up(answer_id)
+    user_id = database_manager.get_userID_by_answerID(answer_id)
+    database_manager.gain_reputation(10, user_id)
     return redirect(url_for("display_question", question_id=question_id))
 
 
 @app.route("/<question_id>/answer/<answer_id>/vote_down")
 def vote_a_down(answer_id, question_id):
     database_manager.vote_answer_down(answer_id)
+    user_id = database_manager.get_userID_by_answerID(answer_id)
+    database_manager.gain_reputation(-2, user_id)
     return redirect(url_for("display_question", question_id=question_id))
 
 
