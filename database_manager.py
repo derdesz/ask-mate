@@ -200,4 +200,17 @@ def get_last_5_questions(cursor: RealDictCursor) -> list:
     cursor.execute("select message, submission_time from question order by submission_time DESC limit 5")
     return cursor.fetchall()
 
-#question.message, question.title, answer.message, question.id, answer.id
+"""
+USER
+"""
+
+@database.connection_handler
+def get_max_user_id(cursor: RealDictCursor) -> list:
+    cursor.execute("select MAX(user_id) from user_datas")
+    max_id = cursor.fetchall()[0]['max']
+    return max_id
+
+
+@database.connection_handler
+def add_user(cursor: RealDictCursor, id, name, password, date) -> list:
+    cursor.execute("INSERT INTO user_datas VALUES ('%s', '%s', '%s', '%s')" % (id, name, password, date))

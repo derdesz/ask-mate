@@ -4,6 +4,7 @@ import data_manager
 import time
 from datetime import datetime
 import database_manager
+import password_hash
 
 
 app = Flask(__name__, static_folder='static')
@@ -44,6 +45,21 @@ def hello():
     else:
         last_5_questions = database_manager.get_last_5_questions()
         return render_template("main.html", last_5_questions=last_5_questions)
+
+
+
+@app.route("/registration", methods=["POST", "GET"])
+def registration():
+    if request.method == "POST":
+        user_id = database_manager.get_max_user_id() + 1
+        username = request.form['username']
+        password = password_hash.hash_password(request.form['password'])
+        time_stample = time.time()
+        registration_date = datetime.fromtimestamp(time_stample)
+        database_manager.add_user(user_id, username, password, registration_date)
+        return redirect(url_for('hello'))
+    else:
+        return render_template('registration.html')
 
 
 @app.route("/search?q=<search_phrase>")
