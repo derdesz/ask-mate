@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>List all users</title>
+</head>
+<body>
+
+<h3>List of all users</h3><br><br>
+
+<table>
+{% for item in ["user ID","username","date of registration","question count","answer count","comment count","reputation"] %}
+    <th>{{ item }}</th>
+    {% endfor %}
+{% for row in all_user_data %}
+    <tr>
+        <td> {{ row.user_id }} </td>
+        <td> {{ row.username }} </td>
+        <td> {{ row.date_of_registration }} </td>
+    </tr>
+
+{% endfor %}
+</table>
+
+</body>
+</html>

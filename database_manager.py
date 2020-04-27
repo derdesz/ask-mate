@@ -229,3 +229,11 @@ def get_hash_password(cursor: RealDictCursor, username) -> list:
     cursor.execute("select password from user_datas where username = '%s' " % username)
     pw = cursor.fetchall()[0]['password']
     return pw
+
+
+@database.connection_handler
+def get_all_users(cursor: RealDictCursor) -> list:
+    cursor.execute("select * from user_datas")
+    all_datas = cursor.fetchall()
+    list_of_all_user_data = [row for row in all_datas]
+    return list_of_all_user_data

@@ -7,5 +7,11 @@
       <jdbc-driver>org.postgresql.Driver</jdbc-driver>
       <jdbc-url>jdbc:postgresql://localhost:5432/online_test</jdbc-url>
     </data-source>
+    <data-source source="LOCAL" name="askmate@localhost" uuid="3ccb2411-6d37-4b2c-b271-407b0ae06233">
+      <driver-ref>postgresql</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>org.postgresql.Driver</jdbc-driver>
+      <jdbc-url>jdbc:postgresql://localhost:5432/askmate</jdbc-url>
+    </data-source>
   </component>
 </project>
