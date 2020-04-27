@@ -79,10 +79,17 @@ def login():
 
 @app.route("/users")
 def all_users():
-    all_user_data = database_manager.get_all_users()
-    print(all_user_data)
-    return render_template('list_all_users.html', all_user_data=all_user_data)
+    if 'username' in session:
+        all_user_data = database_manager.get_all_users()
+        print(all_user_data)
+        return render_template('list_all_users.html', all_user_data=all_user_data)
+    else:
+        return redirect(url_for('hello'))
 
+
+@app.route("/user/<user_id>")
+def user_page():
+    pass
 
 
 

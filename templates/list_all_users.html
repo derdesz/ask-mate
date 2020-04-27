@@ -15,8 +15,12 @@
 {% for row in all_user_data %}
     <tr>
         <td> {{ row.user_id }} </td>
-        <td> {{ row.username }} </td>
+        <td><a href="{{ url_for('user_page', user_id=row.user_id) }}"> {{ row.username }} </a></td>
         <td> {{ row.date_of_registration }} </td>
+        <td> {{ row.question_count }} </td>
+        <td> {{ row.answer_count }} </td>
+        <td> {{ row.comment_count }} </td>
+
     </tr>
 
 {% endfor %}
