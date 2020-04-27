@@ -241,6 +241,18 @@ def get_hash_password(cursor: RealDictCursor, username) -> list:
     pw = cursor.fetchall()[0]['password']
     return pw
 
+
+@database.connection_handler
+def get_all_users(cursor: RealDictCursor) -> list:
+    cursor.execute("select user_datas.user_id, user_datas.username, "
+                   "user_datas.date_of_registration, count(user_binds.binded_questions) AS QUESTION_COUNT, "
+                   "count(user_binds.binded_answers) AS ANSWER_COUNT, count(user_binds.binded_comments) AS COMMENT_COUNT "
+                   "FROM user_datas FULL JOIN user_binds ON user_datas.user_id=user_binds.user_id "
+                   "GROUP BY user_datas.user_id, user_datas.username, user_datas.date_of_registration")
+    all_datas = cursor.fetchall()
+    list_of_all_user_data = [row for row in all_datas]
+    return list_of_all_user_data
+
 @database.connection_handler
 def get_userID_by_username(cursor: RealDictCursor, username) -> list:
     cursor.execute("select user_id from user_datas where username = '%s' " % username)

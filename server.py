@@ -7,12 +7,12 @@ import database_manager
 import password_hash
 import os
 from werkzeug.utils import secure_filename
-
+import bcrypt
 
 app = Flask(__name__, static_folder='static')
 app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
 
-app.config["IMAGE_UPLOADS"] = "/home/getulus/my_project/web/1st/ask-mate-remotemates/static"
+app.config["IMAGE_UPLOADS"] = "/Users/erdeszdora/Desktop/projects/ask-mate-remotemates/static"
 app.config["ALLOWED_IMAGE_EXTENSIONS"] = ["PNG", "JPG"]
 
 
@@ -75,6 +75,21 @@ def login():
         return redirect(url_for('hello'))
     else:
         return render_template('Login.html')
+
+
+@app.route("/users")
+def all_users():
+    if 'username' in session:
+        all_user_data = database_manager.get_all_users()
+        print(all_user_data)
+        return render_template('list_all_users.html', all_user_data=all_user_data)
+    else:
+        return redirect(url_for('hello'))
+
+
+@app.route("/user/<user_id>")
+def user_page():
+    pass
 
 
 
