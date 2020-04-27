@@ -55,6 +55,7 @@ def registration():
         time_stample = time.time()
         registration_date = datetime.fromtimestamp(time_stample)
         database_manager.add_user(user_id, username, password, registration_date)
+
         return redirect(url_for('hello'))
     else:
         return render_template('registration.html')
@@ -125,7 +126,7 @@ def ask_question():
         if 'username' in session:
             if request.form:
                 database_manager.add_question(q_id, time_stample, request.form["title"], request.form["message"])
-
+                database_manager.create_user_q_bind(database_manager.get_userID_by_username(session['username']), q_id)
             if request.files:
                 return redirect(url_for("ask_question"))
 
@@ -144,6 +145,8 @@ def add_q_comment(question_id):
         time_stample = datetime.fromtimestamp(time_stample)
         id = data_manager.create_id()
         database_manager.add_question_comment(id, question_id, request.form["comment"], time_stample)
+        if 'username' in session:
+            database_manager.create_user_c_bind(database_manager.get_userID_by_username(session['username']),id)
         return redirect(url_for("display_question", question_id=question_id))
     else:
         return render_template("add_comment.html", question_id=question_id)
@@ -176,6 +179,7 @@ def new_answer(question_id):
             time_stample = datetime.fromtimestamp(time_stample)
             a_id = data_manager.create_id()
             database_manager.add_answer(question_id, a_id, time_stample, request.form["message"])
+            database_manager.create_user_a_bind(database_manager.get_userID_by_username(session['username']), a_id)
 
             return redirect(url_for("display_question", question_id=question_id))
 
@@ -201,6 +205,8 @@ def add_a_comment(answer_id, question_id):
         time_stample = datetime.fromtimestamp(time_stample)
         id = data_manager.create_id()
         database_manager.add_answer_comment(id, answer_id, request.form["comment"], time_stample)
+        if 'username' in session:
+            database_manager.create_user_c_bind(database_manager.get_userID_by_username(session['username']), id)
 
         return redirect(url_for("display_question", question_id=question_id))
     else:

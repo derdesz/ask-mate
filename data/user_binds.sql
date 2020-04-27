@@ -1,0 +1,1 @@
+create table user_binds (user_id int, binded_questions int, binded_answers int, binded_comments int);

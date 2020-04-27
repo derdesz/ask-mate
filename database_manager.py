@@ -229,3 +229,23 @@ def get_hash_password(cursor: RealDictCursor, username) -> list:
     cursor.execute("select password from user_datas where username = '%s' " % username)
     pw = cursor.fetchall()[0]['password']
     return pw
+
+@database.connection_handler
+def get_userID_by_username(cursor: RealDictCursor, username) -> list:
+    cursor.execute("select user_id from user_datas where username = '%s' " % username)
+    id = cursor.fetchall()[0]['user_id']
+    return id
+
+
+@database.connection_handler
+def create_user_q_bind(cursor: RealDictCursor, user_id, q_bind) -> list:
+    cursor.execute("INSERT INTO user_binds VALUES ('%s', '%s', null, null)" % (user_id, q_bind))
+
+@database.connection_handler
+def create_user_a_bind(cursor: RealDictCursor, user_id, a_bind) -> list:
+    cursor.execute("INSERT INTO user_binds VALUES ('%s',  null, '%s', null)" % (user_id, a_bind))
+
+
+@database.connection_handler
+def create_user_c_bind(cursor: RealDictCursor, user_id, c_bind) -> list:
+    cursor.execute("INSERT INTO user_binds VALUES ('%s', null, null, '%s')" % (user_id, c_bind))
