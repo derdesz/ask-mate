@@ -407,6 +407,11 @@ def tags():
     tags = database_manager.get_tag_with_question_count()
     return render_template('list_tags.html', tags=tags)
 
+@app.route("/logout")
+def logout():
+    session.clear()
+    return redirect(url_for('hello'))
+
 
 if __name__ == "__main__":
     app.run(debug=True)
