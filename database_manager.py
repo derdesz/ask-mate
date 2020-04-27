@@ -280,3 +280,36 @@ def get_userID_by_questionID(cursor: RealDictCursor, q_id) -> list:
     cursor.execute("select user_id from user_binds where binded_questions = %s " % q_id)
     id = [row['user_id'] for row in cursor.fetchall()]
     return id[0]
+
+
+@database.connection_handler
+def get_user_data_by_username(cursor: RealDictCursor, user_id) -> list:
+    cursor.execute("SELECT user_datas.user_id, user_datas.username, user_datas.date_of_registration,"
+                   "COUNT(user_binds.binded_questions) AS binded_questions, COUNT(user_binds.binded_answers) AS binded_answers,"
+                   "COUNT(user_binds.binded_comments) AS binded_comments FROM user_datas FULL JOIN user_binds"
+                   " ON user_datas.user_id=user_binds.user_id "
+                   "WHERE user_datas.user_id = '%s' GROUP BY user_datas.user_id, user_datas.username, user_datas.date_of_registration" % user_id)
+    user_datas = cursor.fetchall()
+    return user_datas
+
+@database.connection_handler
+def get_all_questions_by_user(cursor: RealDictCursor, user_id) -> list:
+    cursor.execute("SELECT question.message FROM question INNER JOIN user_binds "
+                   "ON question.id=user_binds.binded_questions WHERE user_id = '%s' " % user_id)
+    questions = cursor.fetchall()
+    return questions
+
+@database.connection_handler
+def get_all_answers_by_user(cursor: RealDictCursor, user_id) -> list:
+    cursor.execute("SELECT answer.message FROM answer INNER JOIN user_binds "
+                   "ON answer.id=user_binds.binded_answers WHERE user_id = '%s' " % user_id)
+    answers = cursor.fetchall()
+    return answers
+
+@database.connection_handler
+def get_all_comments_by_user(cursor: RealDictCursor, user_id) -> list:
+    cursor.execute("SELECT comment.message FROM comment INNER JOIN user_binds "
+                   "ON comment.id=user_binds.binded_comments WHERE user_id = '%s' " % user_id)
+    comments = cursor.fetchall()
+    return comments
+

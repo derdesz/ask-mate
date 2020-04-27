@@ -37,12 +37,16 @@ def test_site():
 
 @app.route("/", methods=["POST", "GET"])
 def hello():
+    last_5_questions = database_manager.get_last_5_questions()
     if request.method == "POST":
         searched_word = request.form["search"]
         return redirect(url_for("search_question", search_phrase=searched_word))
     else:
-        last_5_questions = database_manager.get_last_5_questions()
-        return render_template("main.html", last_5_questions=last_5_questions)
+        if 'username' in session:
+            user_id = database_manager.get_userID_by_username(session['username'])
+            return render_template("main.html", last_5_questions=last_5_questions, user_id=user_id )
+
+    return render_template("main.html", last_5_questions=last_5_questions, user_id=False)
 
 
 
@@ -88,9 +92,16 @@ def all_users():
 
 
 @app.route("/user/<user_id>")
-def user_page():
-    pass
-
+def user_page(user_id):
+    if 'username' in session:
+        user_data = database_manager.get_user_data_by_username(user_id)
+        user_questions = database_manager.get_all_questions_by_user(user_id)
+        user_answers = database_manager.get_all_answers_by_user(user_id)
+        user_comments = database_manager.get_all_comments_by_user(user_id)
+        return render_template('individual_user.html', user_data=user_data, user_questions=user_questions,
+                           user_answers=user_answers, user_comments=user_comments)
+    else:
+        return redirect(url_for('hello'))
 
 
 @app.route("/search?q=<search_phrase>")

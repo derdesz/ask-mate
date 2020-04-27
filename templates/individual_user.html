@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Individual user</title>
+</head>
+<body>
+
+<h3>USER'S PAGE</h3><br><br>
+
+<table>
+{% for item in ["user ID","username","date of registration","question count","answer count","comment count","reputation"] %}
+    <th>{{ item }}</th>
+    {% endfor %}
+{% for row in user_data %}
+    <tr>
+        <td> {{ row.user_id }} </td>
+        <td> {{ row.username }} </td>
+        <td> {{ row.date_of_registration }} </td>
+        <td> {{ row.binded_questions }} </td>
+        <td> {{ row.binded_answers }} </td>
+        <td> {{ row.binded_comments }} </td>
+    </tr>
+{% endfor %}
+</table><br><br>
+
+<h3>Questions:</h3>
+<table>
+
+    {% for row in user_questions %}
+        <tr>
+            <td> {{ row.message }} </td>
+        </tr>
+    {% endfor %}
+
+</table><br><br>
+
+
+<h3>Answers:</h3>
+<table>
+
+    {% for row in user_answers %}
+        <tr>
+            <td> {{ row.message }} </td>
+        </tr>
+    {% endfor %}
+
+</table><br><br>
+
+
+<h3>Comments:</h3>
+<table>
+
+    {% for row in user_comments %}
+        <tr>
+            <td> {{ row.message }} </td>
+        </tr>
+    {% endfor %}
+
+</table><br><br>
+
+</body>
+</html>
