@@ -77,6 +77,17 @@ def questionID_by_answerID(cursor: RealDictCursor, a_id) -> list:
     cursor.execute("select * from answer where id = '%s'" % a_id)
     return cursor.fetchall()
 
+
+@database.connection_handler
+def accept_answer(cursor: RealDictCursor, a_id) -> list:
+    cursor.execute("update answer set accepted = 'yes' where id = '%s' " % a_id)
+
+@database.connection_handler
+def cancel_answer(cursor: RealDictCursor, a_id) -> list:
+    cursor.execute("update answer set accepted = Null where id = '%s' " % a_id)
+
+
+
 """
 IMAGE
 """
@@ -261,3 +272,11 @@ def create_user_a_bind(cursor: RealDictCursor, user_id, a_bind) -> list:
 @database.connection_handler
 def create_user_c_bind(cursor: RealDictCursor, user_id, c_bind) -> list:
     cursor.execute("INSERT INTO user_binds VALUES ('%s', null, null, '%s')" % (user_id, c_bind))
+
+
+
+@database.connection_handler
+def get_userID_by_questionID(cursor: RealDictCursor, q_id) -> list:
+    cursor.execute("select user_id from user_binds where binded_questions = %s " % q_id)
+    id = [row['user_id'] for row in cursor.fetchall()]
+    return id[0]

@@ -1,0 +1,1 @@
+alter table answer add accepted varchar;

@@ -117,19 +117,31 @@ def list():
         return render_template('list.html', all_q_data=all_question_datas)
 
 
-@app.route("/list/question/<string:question_id>")
+@app.route("/list/question/<string:question_id>", methods=["POST", "GET"])
 def display_question(question_id):
-    current_q_data = database_manager.get_current_question(question_id)
-    all_a_data = database_manager.get_all_answer(question_id)
+    if request.method == "POST":
+        if 'username' in session and database_manager.get_userID_by_username(session['username']) == database_manager.get_userID_by_questionID(question_id):
+            if 'accept' in request.form:
+                answer_id = request.form['accept']
+                database_manager.accept_answer(answer_id)
+            else:
+                answer_id = request.form['cancel']
+                database_manager.cancel_answer(answer_id)
+        return redirect(url_for("display_question", question_id=question_id))
 
-    comment_a_data = database_manager.get_all_comment()
-    comment_q_data = database_manager.get_comment("question_id", question_id)
 
-    all_tags = database_manager.get_tag_for_question(question_id)
+    else:
+        current_q_data = database_manager.get_current_question(question_id)
+        all_a_data = database_manager.get_all_answer(question_id)
 
-    return render_template("display_question.html", comment_a_data=comment_a_data,
-                           comment_q_data=comment_q_data, id=question_id, all_a_data=all_a_data,
-                           current_q_data=current_q_data, all_tags=all_tags)
+        comment_a_data = database_manager.get_all_comment()
+        comment_q_data = database_manager.get_comment("question_id", question_id)
+
+        all_tags = database_manager.get_tag_for_question(question_id)
+
+        return render_template("display_question.html", comment_a_data=comment_a_data,
+                               comment_q_data=comment_q_data, id=question_id, all_a_data=all_a_data,
+                               current_q_data=current_q_data, all_tags=all_tags)
 
 
 @app.route("/list/add-question", methods=["POST", "GET"])
