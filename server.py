@@ -1,18 +1,16 @@
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for, session, flash
 import csv
 import data_manager
 import time
 from datetime import datetime
 import database_manager
 import password_hash
-
-
-app = Flask(__name__, static_folder='static')
-
 import os
 from werkzeug.utils import secure_filename
 
+
 app = Flask(__name__, static_folder='static')
+app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
 
 app.config["IMAGE_UPLOADS"] = "/home/getulus/my_project/web/1st/ask-mate-remotemates/static"
 app.config["ALLOWED_IMAGE_EXTENSIONS"] = ["PNG", "JPG"]
@@ -62,6 +60,23 @@ def registration():
         return render_template('registration.html')
 
 
+
+@app.route("/login", methods=["POST", "GET"])
+def login():
+    if request.method == "POST":
+        user_name = request.form['username']
+        password = request.form['password']
+        if user_name in database_manager.get_usernames() and password_hash.verify_password(password, database_manager.get_hash_password(user_name)):
+            session.permanent = True
+            session['username'] = user_name
+        else:
+            pass
+        return redirect(url_for('hello'))
+    else:
+        return render_template('Login.html')
+
+
+
 @app.route("/search?q=<search_phrase>")
 def search_question(search_phrase):
     search_result_q = database_manager.searched_phrase_q(search_phrase)
@@ -107,33 +122,20 @@ def ask_question():
     time_stample = datetime.fromtimestamp(time_stample)
     q_id = data_manager.create_id()
     if request.method == "POST":
-        if request.form:
-            database_manager.add_question(q_id, time_stample, request.form["title"], request.form["message"])
+        if 'username' in session:
+            if request.form:
+                database_manager.add_question(q_id, time_stample, request.form["title"], request.form["message"])
 
-        if request.files:
-            return redirect(url_for("ask_question"))
-        '''   
-            image = request.files["image"]
-            filename = image.filename
-            print(filename)
-            if image.filename == "":
-                print("image must have a filename")
-                return redirect(request.url)
-            if not allowed_image(image.filename):
-                print("That image extension is not allowed")
-                return redirect(request.url)
-            else:
-                filename = secure_filename(image.filename)
-                database_manager.add_image(filename, )
-
-                image.save(os.path.join(app.config["IMAGE_UPLOADS"], filename))
-        '''
+            if request.files:
+                return redirect(url_for("ask_question"))
 
         return redirect(url_for("display_question", question_id=q_id))
 
     else:
-        return render_template("add_question.html")
-
+        if 'username' in session:
+            return render_template("add_question.html")
+        else:
+            return redirect(url_for("list"))
 
 @app.route("/list/question/<string:question_id>/comment", methods=["POST", "GET"])
 def add_q_comment(question_id):
@@ -168,17 +170,19 @@ def upload_answer_image(question_id, answer_id):
 
 @app.route("/question/<question_id>/new-answer", methods=["POST", "GET"])
 def new_answer(question_id):
-    if request.method == "POST":
-        time_stample = time.time()
-        time_stample = datetime.fromtimestamp(time_stample)
-        a_id = data_manager.create_id()
-        database_manager.add_answer(question_id, a_id, time_stample, request.form["message"])
+    if 'username' in session:
+        if request.method == "POST":
+            time_stample = time.time()
+            time_stample = datetime.fromtimestamp(time_stample)
+            a_id = data_manager.create_id()
+            database_manager.add_answer(question_id, a_id, time_stample, request.form["message"])
 
-        return redirect(url_for("display_question", question_id=question_id))
+            return redirect(url_for("display_question", question_id=question_id))
 
+        else:
+            return render_template("new_answer.html")
     else:
-        return render_template("new_answer.html")
-
+        return redirect(url_for("display_question", question_id=question_id))
 
 @app.route("/question/<question_id>/answer/<answer_id>/edit", methods=["POST", "GET"])
 def edit_answer(answer_id, question_id):

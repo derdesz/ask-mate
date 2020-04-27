@@ -214,3 +214,18 @@ def get_max_user_id(cursor: RealDictCursor) -> list:
 @database.connection_handler
 def add_user(cursor: RealDictCursor, id, name, password, date) -> list:
     cursor.execute("INSERT INTO user_datas VALUES ('%s', '%s', '%s', '%s')" % (id, name, password, date))
+
+
+@database.connection_handler
+def get_usernames(cursor: RealDictCursor) -> list:
+    cursor.execute("select username from user_datas")
+    all_datas = cursor.fetchall()
+    list_of_datas = [row['username'] for row in all_datas]
+    return list_of_datas
+
+
+@database.connection_handler
+def get_hash_password(cursor: RealDictCursor, username) -> list:
+    cursor.execute("select password from user_datas where username = '%s' " % username)
+    pw = cursor.fetchall()[0]['password']
+    return pw
