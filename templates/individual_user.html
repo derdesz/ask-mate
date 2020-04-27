@@ -3,12 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <title>Individual user</title>
+         <style>
+        body {background-color: gainsboro}
+        h1 {font-family: Dyuthi, sans-serif;
+            color: darkcyan;
+        }
+        h2 {font-family: Dyuthi, sans-serif;
+            color: darkcyan;
+        }
+        #info {text-align: center;
+         }
+        </style>
+
 </head>
 <body>
 
-<h3>USER'S PAGE</h3><br><br>
+<h2>USER'S PAGE</h2><br><br>
 
-<table>
+<table id="info">
 {% for item in ["user ID","username","date of registration","question count","answer count","comment count","reputation"] %}
     <th>{{ item }}</th>
     {% endfor %}
@@ -59,6 +71,8 @@
     {% endfor %}
 
 </table><br><br>
+
+<a href="{{ url_for('hello') }}">Back to main page</a>
 
 </body>
 </html>

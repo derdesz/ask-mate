@@ -3,6 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <title>List tags</title>
+    <style>
+
+    table {border: 1px solid black; padding-left: 20px; width: 100px
+    }
+
+    tr {text-align: center}
+    body {background-color: gainsboro;
+        padding-top: 30px;
+        padding-left: 10px
+    }
+    </style>
 </head>
 <body>
 
@@ -11,7 +22,7 @@
     {% for header in ["TAG", "COUNT"] %}
         {{ header }}
     {% endfor %}
-</table>
+</table><br>
 
 <table>
     {% for row in tags %}
@@ -22,12 +33,9 @@
 
         </tr>
     {% endfor %}
+</table><br><br>
 
-
-
-</table>
-
-
+<a href="{{ url_for('hello') }}">Back to main page</a>
 
 </body>
 </html>
