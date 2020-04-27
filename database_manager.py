@@ -237,3 +237,23 @@ def get_all_users(cursor: RealDictCursor) -> list:
     all_datas = cursor.fetchall()
     list_of_all_user_data = [row for row in all_datas]
     return list_of_all_user_data
+
+@database.connection_handler
+def get_userID_by_username(cursor: RealDictCursor, username) -> list:
+    cursor.execute("select user_id from user_datas where username = '%s' " % username)
+    id = cursor.fetchall()[0]['user_id']
+    return id
+
+
+@database.connection_handler
+def create_user_q_bind(cursor: RealDictCursor, user_id, q_bind) -> list:
+    cursor.execute("INSERT INTO user_binds VALUES ('%s', '%s', null, null)" % (user_id, q_bind))
+
+@database.connection_handler
+def create_user_a_bind(cursor: RealDictCursor, user_id, a_bind) -> list:
+    cursor.execute("INSERT INTO user_binds VALUES ('%s',  null, '%s', null)" % (user_id, a_bind))
+
+
+@database.connection_handler
+def create_user_c_bind(cursor: RealDictCursor, user_id, c_bind) -> list:
+    cursor.execute("INSERT INTO user_binds VALUES ('%s', null, null, '%s')" % (user_id, c_bind))
