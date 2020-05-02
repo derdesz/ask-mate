@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>List all users</title>
+
+     <style>
+        body {background-color: gainsboro}
+        h1 {font-family: Dyuthi, sans-serif;
+            color: darkcyan;
+        }
+        h2 {font-family: Dyuthi, sans-serif;
+            color: darkcyan;
+        }
+         td {text-align: center;
+         }
+        </style>
+
+</head>
+<body>
+
+<h2>List of all users</h2><br><br>
+
+<table>
+{% for item in ["user ID","username","date of registration","question count","answer count","comment count","reputation"] %}
+    <th>{{ item }}</th>
+    {% endfor %}
+{% for row in all_user_data %}
+    <tr>
+        <td> {{ row.user_id }} </td>
+        <td><a href="{{ url_for('user_page', user_id=row.user_id) }}"> {{ row.username }} </a></td>
+        <td> {{ row.date_of_registration }} </td>
+        <td> {{ row.question_count }} </td>
+        <td> {{ row.answer_count }} </td>
+        <td> {{ row.comment_count }} </td>
+        <td> {{ row.reputation }} </td>
+    </tr>
+
+{% endfor %}
+</table><br><br>
+
+<a href="{{ url_for('hello') }}">Back to main page</a>
+
+</body>
+</html>

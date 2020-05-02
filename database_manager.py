@@ -77,6 +77,17 @@ def questionID_by_answerID(cursor: RealDictCursor, a_id) -> list:
     cursor.execute("select * from answer where id = '%s'" % a_id)
     return cursor.fetchall()
 
+
+@database.connection_handler
+def accept_answer(cursor: RealDictCursor, a_id) -> list:
+    cursor.execute("update answer set accepted = 'yes' where id = '%s' " % a_id)
+
+@database.connection_handler
+def cancel_answer(cursor: RealDictCursor, a_id) -> list:
+    cursor.execute("update answer set accepted = Null where id = '%s' " % a_id)
+
+
+
 """
 IMAGE
 """
@@ -180,6 +191,16 @@ def get_tag_for_question(cursor: RealDictCursor, q_id) -> list:
 def delete_question_tag(cursor: RealDictCursor, q_id, tag_id) -> list:
     cursor.execute("DELETE FROM question_tag WHERE tag_id = '%s' and question_id = '%s'" % (tag_id, q_id))
 
+
+@database.connection_handler
+def get_tag_with_question_count(cursor: RealDictCursor) -> list:
+    cursor.execute("SELECT tag.name AS tag, COUNT(question_tag.tag_id) AS count "
+                   "FROM tag INNER JOIN question_tag ON tag.id = question_tag.tag_id "
+                   "GROUP BY tag.name, question_tag.tag_id")
+    return cursor.fetchall()
+
+
+
 """
 SEARCH
 """
@@ -200,4 +221,129 @@ def get_last_5_questions(cursor: RealDictCursor) -> list:
     cursor.execute("select message, submission_time from question order by submission_time DESC limit 5")
     return cursor.fetchall()
 
-#question.message, question.title, answer.message, question.id, answer.id
+"""
+USER
+"""
+
+@database.connection_handler
+def get_max_user_id(cursor: RealDictCursor) -> list:
+    cursor.execute("select MAX(user_id) from user_datas")
+    max_id = cursor.fetchall()[0]['max']
+    return max_id
+
+
+@database.connection_handler
+def add_user(cursor: RealDictCursor, id, name, password, date, repu) -> list:
+    cursor.execute("INSERT INTO user_datas VALUES ('%s', '%s', '%s', '%s', '%s')" % (id, name, password, date, repu))
+
+
+@database.connection_handler
+def get_usernames(cursor: RealDictCursor) -> list:
+    cursor.execute("select username from user_datas")
+    all_datas = cursor.fetchall()
+    list_of_datas = [row['username'] for row in all_datas]
+    return list_of_datas
+
+
+@database.connection_handler
+def get_hash_password(cursor: RealDictCursor, username) -> list:
+    cursor.execute("select password from user_datas where username = '%s' " % username)
+    pw = cursor.fetchall()[0]['password']
+    return pw
+
+
+@database.connection_handler
+def get_all_users(cursor: RealDictCursor) -> list:
+    cursor.execute("select user_datas.user_id, user_datas.username, user_datas.reputation,"
+                   "user_datas.date_of_registration, count(user_binds.binded_questions) AS QUESTION_COUNT, "
+                   "count(user_binds.binded_answers) AS ANSWER_COUNT, count(user_binds.binded_comments) AS COMMENT_COUNT "
+                   "FROM user_datas FULL JOIN user_binds ON user_datas.user_id=user_binds.user_id "
+                   "GROUP BY user_datas.user_id, user_datas.username, user_datas.date_of_registration, user_datas.reputation")
+    all_datas = cursor.fetchall()
+    list_of_all_user_data = [row for row in all_datas]
+    return list_of_all_user_data
+
+@database.connection_handler
+def get_userID_by_username(cursor: RealDictCursor, username) -> list:
+    cursor.execute("select user_id from user_datas where username = '%s' " % username)
+    id = cursor.fetchall()[0]['user_id']
+    return id
+
+
+@database.connection_handler
+def create_user_q_bind(cursor: RealDictCursor, user_id, q_bind) -> list:
+    cursor.execute("INSERT INTO user_binds VALUES ('%s', '%s', null, null)" % (user_id, q_bind))
+
+@database.connection_handler
+def create_user_a_bind(cursor: RealDictCursor, user_id, a_bind) -> list:
+    cursor.execute("INSERT INTO user_binds VALUES ('%s',  null, '%s', null)" % (user_id, a_bind))
+
+
+@database.connection_handler
+def create_user_c_bind(cursor: RealDictCursor, user_id, c_bind) -> list:
+    cursor.execute("INSERT INTO user_binds VALUES ('%s', null, null, '%s')" % (user_id, c_bind))
+
+
+
+@database.connection_handler
+def get_userID_by_questionID(cursor: RealDictCursor, q_id) -> list:
+    cursor.execute("select user_id from user_binds where binded_questions = %s " % q_id)
+    id = [row['user_id'] for row in cursor.fetchall()]
+    return id[0]
+
+
+@database.connection_handler
+def get_user_data_by_username(cursor: RealDictCursor, user_id) -> list:
+    cursor.execute("SELECT user_datas.user_id, user_datas.username, user_datas.date_of_registration,"
+                   "COUNT(user_binds.binded_questions) AS binded_questions, COUNT(user_binds.binded_answers) AS binded_answers,"
+                   "COUNT(user_binds.binded_comments) AS binded_comments, user_datas.reputation FROM user_datas FULL JOIN user_binds"
+                   " ON user_datas.user_id=user_binds.user_id "
+                   "WHERE user_datas.user_id = '%s' GROUP BY user_datas.user_id, user_datas.username, user_datas.date_of_registration, user_datas.reputation" % user_id)
+    user_datas = cursor.fetchall()
+    return user_datas
+
+@database.connection_handler
+def get_all_questions_by_user(cursor: RealDictCursor, user_id) -> list:
+    cursor.execute("SELECT question.message FROM question INNER JOIN user_binds "
+                   "ON question.id=user_binds.binded_questions WHERE user_id = '%s' " % user_id)
+    questions = cursor.fetchall()
+    return questions
+
+@database.connection_handler
+def get_all_answers_by_user(cursor: RealDictCursor, user_id) -> list:
+    cursor.execute("SELECT answer.message FROM answer INNER JOIN user_binds "
+                   "ON answer.id=user_binds.binded_answers WHERE user_id = '%s' " % user_id)
+    answers = cursor.fetchall()
+    return answers
+
+@database.connection_handler
+def get_all_comments_by_user(cursor: RealDictCursor, user_id) -> list:
+    cursor.execute("SELECT comment.message FROM comment INNER JOIN user_binds "
+                   "ON comment.id=user_binds.binded_comments WHERE user_id = '%s' " % user_id)
+    comments = cursor.fetchall()
+    return comments
+
+@database.connection_handler
+def get_reputation_by_user(cursor: RealDictCursor, user_id) -> list:
+    cursor.execute("SELECT reputation FROM user_datas WHERE user_id = '%s' " % user_id)
+    comments = cursor.fetchall()
+    return comments
+
+
+@database.connection_handler
+def get_userID_by_answerID(cursor: RealDictCursor, a_id) -> list:
+    cursor.execute("select user_id from user_binds where binded_answers = %s " % a_id)
+    id = [row['user_id'] for row in cursor.fetchall()]
+    return id[0]
+
+
+"""
+Reputation
+"""
+
+
+@database.connection_handler
+def gain_reputation(cursor: RealDictCursor, points, user_id) -> list:
+    cursor.execute("update user_datas set reputation = reputation + '%s' where user_id = '%s' " % (points, user_id))
+
+

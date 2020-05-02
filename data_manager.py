@@ -5,12 +5,7 @@ import database_manager
 
 
 def create_id():
-    """
-    all_id = database_manager.get_all_q_id()
-    all_id_list = []
-    for data in all_id:
-        all_id_list.append(data.id)
-    """
+
     id = random.randint(1, 10000)
     return id
 
